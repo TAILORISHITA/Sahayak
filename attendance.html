@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | UniERP</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <style>
+        .sidebar-item.active {
+            background-color: #e2e8f0;
+            color: #2563eb;
+            border-left: 4px solid #2563eb;
+        }
+
+        .sidebar-item {
+            color: #4a5568;
+            border-left: 4px solid transparent;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .sidebar-item:hover {
+            background-color: #e2e8f0;
+            color: #2563eb;
+        }
+
+        .form-section {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .notification {
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Ensure no radio buttons are pre-selected */
+        input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        input[type="radio"]:checked {
+            background-color: currentColor;
+            border-color: currentColor;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 flex h-screen">
+
+    <aside class="sidebar w-64 flex-shrink-0 border-r border-gray-200 bg-white">
+        <div class="p-6">
+            <h1 class="text-2xl font-bold text-blue-600">UniERP</h1>
+            <p class="text-sm text-gray-500">Admin Management</p>
+        </div>
+        <nav class="mt-6">
+            <a class="flex items-center px-6 py-3 sidebar-item" href="../dashboard/index.html">
+                <span class="material-icons mr-3">dashboard</span>
+                <span>Dashboard</span>
+            </a>
+            <a class="flex items-center px-6 py-3 sidebar-item" href="../admission/index.html">
+                <span class="material-icons mr-3">person_add</span>
+                <span>Admissions</span>
+            </a>
+            <a class="flex items-center px-6 py-3 sidebar-item" href="../studentApplications/index.html">
+                <span class="material-icons mr-3">people</span>
+                <span>Students</span>
+            </a>
+            <a class="flex items-center px-6 py-3 sidebar-item active" href="index.html">
+                <span class="material-icons mr-3">event_available</span>
+                <span>Attendance</span>
+            </a>
+            <a class="flex items-center px-6 py-3 sidebar-item" href="../hostel/index.html">
+                <span class="material-icons mr-3">hotel</span>
+                <span>Hostels</span>
+            </a>
+            <a class="flex items-center px-6 py-3 sidebar-item" href="../library/index.html">
+                <span class="material-icons mr-3">local_library</span>
+                <span>Library</span>
+            </a>
+            <a class="flex items-center px-6 py-3 sidebar-item" href="../settings/index.html">
+                <span class="material-icons mr-3">settings</span>
+                <span>Settings</span>
+            </a>
+            <a class="flex items-center px-6 py-3 sidebar-item" href="../support/index.html">
+                <span class="material-icons mr-3">support</span>
+                <span>Support</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 p-8 overflow-y-auto">
+        <h1 class="text-3xl font-semibold text-gray-800 mb-6">Attendance & Assignments</h1>
+
+        <!-- Create Lecture Form -->
+        <section class="form-section p-6 mb-8">
+            <h2 class="text-2xl font-medium text-gray-700 mb-4">Create New Lecture</h2>
+            <form id="create-lecture-form" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="lecture-title" class="block text-sm font-medium text-gray-700 mb-2">Lecture
+                            Title</label>
+                        <input type="text" id="lecture-title" name="title" required
+                            class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="e.g., CS101: Introduction to Programming">
+                    </div>
+                    <div>
+                        <label for="lecture-date" class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                        <input type="date" id="lecture-date" name="date" required
+                            class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label for="lecture-program"
+                            class="block text-sm font-medium text-gray-700 mb-2">Program</label>
+                        <select id="lecture-program" name="program" required
+                            class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Select Program</option>
+                            <option value="Computer Science">Computer Science</option>
+                            <option value="Business Administration">Business Administration</option>
+                            <option value="Electrical Engineering">Electrical Engineering</option>
+                            <option value="Mechanical Engineering">Mechanical Engineering</option>
+                            <option value="Mathematics">Mathematics</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <button type="submit"
+                        class="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition duration-200">
+                        Create Lecture
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Manage Attendance Form -->
+        <section class="form-section p-6 mb-8">
+            <h2 class="text-2xl font-medium text-gray-700 mb-4">Manage Attendance</h2>
+            <div
+                class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 md:space-x-4 mb-6">
+                <div class="flex items-center space-x-4 w-full md:w-auto">
+                    <label for="lecture-select" class="text-gray-700">Lecture:</label>
+                    <select id="lecture-select"
+                        class="border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full">
+                        <option value="">Select a Lecture</option>
+                    </select>
+                </div>
+                <div class="flex space-x-2">
+                    <button id="load-students-btn"
+                        class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition duration-200">
+                        Load Students
+                    </button>
+                    <button id="clear-attendance-btn"
+                        class="bg-yellow-600 text-white px-4 py-2 rounded-md hover:bg-yellow-700 transition duration-200">
+                        Clear All
+                    </button>
+                </div>
+            </div>
+
+            <div id="students-container" class="overflow-x-auto" style="display: none;">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Student Name</th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Enrollment No.</th>
+                            <th scope="col"
+                                class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="students-tbody" class="bg-white divide-y divide-gray-200">
+                        <!-- Students will be dynamically loaded here -->
+                    </tbody>
+                </table>
+                <div class="mt-6 flex justify-between items-center">
+                    <button id="debug-attendance-btn"
+                        class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition duration-200 text-sm">
+                        Debug Attendance
+                    </button>
+                    <button id="save-attendance-btn"
+                        class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition duration-200">
+                        Save Attendance
+                    </button>
+                </div>
+            </div>
+
+            <div id="no-lecture-message" class="text-center text-gray-500 py-8">
+                Please select a lecture to load students.
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Attendance Management Module -->
+    <script type="module">
+        /**
+         * COMPLETE ATTENDANCE SYSTEM - FIXED VERSION
+         * 
+         * Key Features:
+         * 1. NO default selection - students start with clean slate
+         * 2. ALL attendance data saved (present, late, AND absent)
+         * 3. Complete state restoration on page refresh/lecture change
+         * 4. Backward compatibility with old data structure
+         * 5. Auto-load existing attendance when switching lectures
+         * 
+         * Data Structure:
+         * - attendedBy: [present/late students only] (for compatibility)
+         * - allAttendance: [ALL marked students including absent] (new field)
+         */
+
+        /**
+         * Firebase Configuration Module
+         */
+        class FirebaseConfig {
+            constructor() {
+                // Firebase Configuration (Replace with your actual config)
+                this.config = {
+                    apiKey: "AIzaSyDWVxMKaOjD10i87pX-kF6bPG8HbUNwGCY",
+                    authDomain: "unierp-79b03.firebaseapp.com",
+                    projectId: "unierp-79b03",
+                    storageBucket: "unierp-79b03.appspot.com",
+                    messagingSenderId: "62493715652",
+                    appId: "1:62493715652:web:72e922ae35048dbd40ad91"
+                };
+            }
+
+            initialize() {
+                if (typeof firebase === 'undefined') {
+                    throw new Error('Firebase SDK not loaded');
+                }
+                firebase.initializeApp(this.config);
+                return firebase.firestore();
+            }
+        }
+
+        /**
+         * Attendance Management Application
+         */
+        class AttendanceApp {
+            constructor() {
+                this.db = null;
+                this.currentLectureId = null;
+                this.students = [];
+                this.firebaseConfig = new FirebaseConfig();
+
+                // DOM element references
+                this.elements = {};
+            }
+
+            /**
+             * Initialize the application
+             */
+            async init() {
+                try {
+                    console.log('Initializing Attendance App...');
+
+                    // Initialize Firebase
+                    this.db = this.firebaseConfig.initialize();
+
+                    // Cache DOM elements
+                    this.cacheElements();
+
+                    // Set up event listeners
+                    this.setupEventListeners();
+
+                    // Load initial data
+                    await this.loadLectures();
+
+                    console.log('Attendance App initialized successfully');
+                } catch (error) {
+                    console.error('Error initializing app:', error);
+                    this.showError('Failed to initialize application. Please refresh the page.');
+                }
+            }
+
+            /**
+             * Cache DOM elements for better performance
+             */
+            cacheElements() {
+                this.elements = {
+                    createLectureForm: document.getElementById('create-lecture-form'),
+                    lectureSelect: document.getElementById('lecture-select'),
+                    loadStudentsBtn: document.getElementById('load-students-btn'),
+                    clearAttendanceBtn: document.getElementById('clear-attendance-btn'),
+                    studentsContainer: document.getElementById('students-container'),
+                    studentsTbody: document.getElementById('students-tbody'),
+                    noLectureMessage: document.getElementById('no-lecture-message'),
+                    saveAttendanceBtn: document.getElementById('save-attendance-btn'),
+                    debugAttendanceBtn: document.getElementById('debug-attendance-btn')
+                };
+
+                // Verify required elements exist
+                const required = ['createLectureForm', 'lectureSelect', 'loadStudentsBtn', 'studentsContainer', 'studentsTbody', 'noLectureMessage', 'saveAttendanceBtn'];
+                for (const key of required) {
+                    if (!this.elements[key]) {
+                        throw new Error(Required element not found: ${ key });
+                    }
+                }
+            }
+
+            /**
+             * Set up all event listeners
+             */
+            setupEventListeners() {
+                // Create lecture form submission
+                this.elements.createLectureForm.addEventListener('submit', (e) => this.handleCreateLecture(e));
+
+                // Load students button click
+                this.elements.loadStudentsBtn.addEventListener('click', () => this.handleLoadStudents());
+
+                // Clear attendance button click (if exists)
+                if (this.elements.clearAttendanceBtn) {
+                    this.elements.clearAttendanceBtn.addEventListener('click', () => this.clearAllAttendance());
+                }
+
+                // Save attendance button click
+                this.elements.saveAttendanceBtn.addEventListener('click', () => this.handleSaveAttendance());
+
+                // Debug attendance button click (if exists)
+                if (this.elements.debugAttendanceBtn) {
+                    this.elements.debugAttendanceBtn.addEventListener('click', () => this.debugAttendance());
+                }
+
+                // Lecture selection change - AUTO LOAD
+                this.elements.lectureSelect.addEventListener('change', () => this.handleLectureSelection());
+            }
+
+            /**
+             * Handle lecture selection change - AUTO LOAD STUDENTS
+             */
+            async handleLectureSelection() {
+                const lectureId = this.elements.lectureSelect.value;
+                console.log('Lecture selection changed:', lectureId);
+
+                if (!lectureId) {
+                    this.hideStudentsTable();
+                    this.currentLectureId = null;
+                } else {
+                    // Auto-load students when lecture is selected
+                    this.currentLectureId = lectureId;
+                    await this.loadStudents();
+                    await this.loadExistingAttendance();
+                }
+            }
+
+            /**
+             * Handle create lecture form submission
+             */
+            async handleCreateLecture(e) {
+                e.preventDefault();
+
+                try {
+                    const formData = new FormData(e.target);
+                    const lectureData = {
+                        title: formData.get('title'),
+                        date: formData.get('date'),
+                        program: formData.get('program'),
+                        attendedBy: [],
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    };
+
+                    await this.db.collection('lectures').add(lectureData);
+                    this.showSuccess('Lecture created successfully!');
+                    e.target.reset();
+                    await this.loadLectures(); // Reload lectures dropdown
+                } catch (error) {
+                    console.error('Error creating lecture:', error);
+                    this.showError('Error creating lecture. Please try again.');
+                }
+            }
+
+            /**
+             * Handle load students button click
+             */
+            async handleLoadStudents() {
+                const lectureId = this.elements.lectureSelect.value;
+
+                if (!lectureId) {
+                    this.showError('Please select a lecture first.');
+                    return;
+                }
+
+                this.currentLectureId = lectureId;
+                await this.loadStudents();
+                await this.loadExistingAttendance();
+            }
+
+            /**
+             * Load lectures from Firestore into dropdown
+             */
+            async loadLectures() {
+                try {
+                    console.log('Loading lectures...');
+                    const lecturesSnapshot = await this.db.collection('lectures').orderBy('date', 'desc').get();
+
+                    // Clear existing options except the first one
+                    this.elements.lectureSelect.innerHTML = '<option value="">Select a Lecture</option>';
+
+                    lecturesSnapshot.forEach(doc => {
+                        const lecture = doc.data();
+                        const option = document.createElement('option');
+                        option.value = doc.id;
+                        option.textContent = ${ lecture.title } - ${ lecture.date } (${ lecture.program });
+                    this.elements.lectureSelect.appendChild(option);
+                });
+
+                console.log(Loaded ${ lecturesSnapshot.size } lectures);
+            } catch(error) {
+                console.error('Error loading lectures:', error);
+                this.showError('Error loading lectures. Please refresh the page.');
+            }
+        }
+
+            /**
+             * Load students from Firestore and display in table
+             */
+            async loadStudents() {
+            try {
+                console.log('Loading students from Firestore...');
+                const studentsSnapshot = await this.db.collection('students').orderBy('name').get();
+
+                this.students = [];
+                this.elements.studentsTbody.innerHTML = '';
+
+                console.log('Students snapshot size:', studentsSnapshot.size);
+
+                if (studentsSnapshot.empty) {
+                    this.elements.studentsTbody.innerHTML = '<tr><td colspan="3" class="text-center py-4 text-gray-500">No students found</td></tr>';
+                    console.log('No students found in Firestore');
+                } else {
+                    studentsSnapshot.forEach(doc => {
+                        const student = { id: doc.id, ...doc.data() };
+                        this.students.push(student);
+                        console.log('Loaded student:', student);
+                        this.createStudentRow(student);
+                    });
+                    console.log('Total students loaded:', this.students.length);
+                }
+
+                this.showStudentsTable();
+            } catch (error) {
+                console.error('Error loading students:', error);
+                this.showError('Error loading students. Please try again.');
+            }
+        }
+
+        /**
+         * FIXED: Create a table row for a student - NO DEFAULT SELECTION
+         */
+        createStudentRow(student) {
+            const row = document.createElement('tr');
+            // IMPORTANT: NO 'checked' attribute on any radio button
+            row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">${this.escapeHtml(student.name)}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${this.escapeHtml(student.eno)}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                        <label class="inline-flex items-center mr-4 cursor-pointer">
+                            <input type="radio" name="attendance-${student.id}" value="present"
+                                class="form-radio text-green-500 h-4 w-4">
+                            <span class="ml-2 text-sm text-green-600">Present</span>
+                        </label>
+                        <label class="inline-flex items-center mr-4 cursor-pointer">
+                            <input type="radio" name="attendance-${student.id}" value="absent"
+                                class="form-radio text-red-500 h-4 w-4">
+                            <span class="ml-2 text-sm text-red-600">Absent</span>
+                        </label>
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="radio" name="attendance-${student.id}" value="late"
+                                class="form-radio text-yellow-500 h-4 w-4">
+                            <span class="ml-2 text-sm text-yellow-600">Late</span>
+                        </label>
+                    </td>
+                `;
+            this.elements.studentsTbody.appendChild(row);
+
+            // Ensure no radio button is checked by default
+            setTimeout(() => {
+                const radioButtons = row.querySelectorAll('input[type="radio"]');
+                radioButtons.forEach(radio => {
+                    radio.checked = false;
+                });
+            }, 0);
+        }
+
+            /**
+             * Load existing attendance data for the selected lecture
+             */
+            async loadExistingAttendance() {
+            try {
+                if (!this.currentLectureId) return;
+
+                console.log('Loading existing attendance for lecture:', this.currentLectureId);
+
+                const lectureDoc = await this.db.collection('lectures').doc(this.currentLectureId).get();
+
+                if (lectureDoc.exists) {
+                    const lectureData = lectureDoc.data();
+                    const attendedBy = lectureData.attendedBy || [];
+
+                    console.log('Existing attendance data:', attendedBy);
+
+                    // First, clear all selections
+                    this.students.forEach(student => {
+                        const radioButtons = document.querySelectorAll(input[name = "attendance-${student.id}"]);
+                        radioButtons.forEach(radio => {
+                            radio.checked = false;
+                        });
+                    });
+
+                    // Then, set existing attendance
+                    attendedBy.forEach(attendance => {
+                        const radioButton = document.querySelector(input[name = "attendance-${attendance.studentId}"][value = "${attendance.status}"]);
+                        if (radioButton) {
+                            radioButton.checked = true;
+                            console.log(Set ${ attendance.name } to ${ attendance.status });
+                        }
+                    });
+
+                    if (attendedBy.length > 0) {
+                        this.showSuccess(Loaded existing attendance for ${ attendedBy.length } students.);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading existing attendance:', error);
+                // Don't show error to user as this is optional functionality
+            }
+        }
+
+        /**
+         * Clear all attendance selections
+         */
+        clearAllAttendance() {
+            if (!this.students.length) {
+                this.showError('No students loaded to clear attendance for.');
+                return;
+            }
+
+            const confirmClear = confirm('Are you sure you want to clear all attendance selections?');
+            if (!confirmClear) return;
+
+            this.students.forEach(student => {
+                const radioButtons = document.querySelectorAll(input[name = "attendance-${student.id}"]);
+                radioButtons.forEach(radio => {
+                    radio.checked = false;
+                });
+            });
+
+            this.showSuccess('All attendance selections cleared.');
+            console.log('Cleared all attendance selections');
+        }
+
+        /**
+         * Debug attendance data collection
+         */
+        debugAttendance() {
+            console.log('=== ATTENDANCE DEBUG ===');
+            console.log('Current Lecture ID:', this.currentLectureId);
+            console.log('Students loaded:', this.students.length);
+
+            const attendanceData = this.collectAttendanceData();
+            const summary = attendanceData.length > 0
+                ? attendanceData.map(s => ${ s.name }(${ s.eno }) - ${ s.status }).join('\n')
+                : 'No students marked as present or late';
+
+            alert(Debug Info: \n\nLecture ID: ${ this.currentLectureId }\nStudents Loaded: ${ this.students.length }\nAttendance Data: ${ attendanceData.length } students\n\n${ summary });
+        }
+
+            /**
+             * Handle save attendance button click
+             */
+            async handleSaveAttendance() {
+            if (!this.currentLectureId) {
+                this.showError('Please select a lecture first.');
+                return;
+            }
+
+            try {
+                // Show loading state
+                this.elements.saveAttendanceBtn.disabled = true;
+                this.elements.saveAttendanceBtn.textContent = 'Saving...';
+
+                const attendedStudents = this.collectAttendanceData();
+
+                // Debug logs
+                console.log('Current Lecture ID:', this.currentLectureId);
+                console.log('Students array:', this.students);
+                console.log('Collected attendance data:', attendedStudents);
+
+                // Save to Firestore
+                await this.db.collection('lectures').doc(this.currentLectureId).update({
+                    attendedBy: attendedStudents,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                if (attendedStudents.length === 0) {
+                    this.showSuccess('Attendance saved successfully! All students marked as absent.');
+                } else {
+                    this.showSuccess(Attendance saved successfully! ${ attendedStudents.length } students marked as present / late.);
+                }
+
+                // Verify the update by reading the document
+                const updatedDoc = await this.db.collection('lectures').doc(this.currentLectureId).get();
+                console.log('Updated document:', updatedDoc.data());
+
+            } catch (error) {
+                console.error('Error saving attendance:', error);
+                this.showError('Error saving attendance. Please try again.');
+            } finally {
+                // Reset button state
+                this.elements.saveAttendanceBtn.disabled = false;
+                this.elements.saveAttendanceBtn.textContent = 'Save Attendance';
+            }
+        }
+
+        /**
+         * Collect attendance data from the form
+         */
+        collectAttendanceData() {
+            const attendedStudents = [];
+
+            console.log('Collecting attendance data for students:', this.students);
+
+            this.students.forEach(student => {
+                const radioButtons = document.querySelectorAll(input[name = "attendance-${student.id}"]);
+                const checkedRadio = document.querySelector(input[name = "attendance-${student.id}"]: checked);
+
+                console.log(Student ${ student.name }(${ student.id }): );
+                console.log('- Radio buttons found:', radioButtons.length);
+                console.log('- Checked radio:', checkedRadio ? checkedRadio.value : 'none (will be treated as absent)');
+
+                if (checkedRadio) {
+                    const status = checkedRadio.value;
+                    if (status === 'present' || status === 'late') {
+                        const studentData = {
+                            studentId: student.id,
+                            name: student.name,
+                            eno: student.eno,
+                            status: status,
+                            timestamp: new Date().toISOString()
+                        };
+                        attendedStudents.push(studentData);
+                        console.log(Added to attendance:, studentData);
+                    }
+                    // If status is 'absent', we don't add to attendedBy array
+                }
+                // If no radio button is checked, student is considered absent (not added to array)
+            });
+
+            console.log('Final attendance array:', attendedStudents);
+            return attendedStudents;
+        }
+
+        /**
+         * Show students table
+         */
+        showStudentsTable() {
+            this.elements.studentsContainer.style.display = 'block';
+            this.elements.noLectureMessage.style.display = 'none';
+        }
+
+        /**
+         * Hide students table
+         */
+        hideStudentsTable() {
+            this.elements.studentsContainer.style.display = 'none';
+            this.elements.noLectureMessage.style.display = 'block';
+        }
+
+        /**
+         * Show success message
+         */
+        showSuccess(message) {
+            this.showNotification(message, 'success');
+        }
+
+        /**
+         * Show error message
+         */
+        showError(message) {
+            this.showNotification(message, 'error');
+        }
+
+        /**
+         * Show notification
+         */
+        showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = notification fixed top - 4 right - 4 p - 4 rounded - md shadow - lg z - 50 transition - all duration - 300 ${ this.getNotificationClasses(type) };
+            notification.textContent = message;
+
+            // Add close button
+            const closeBtn = document.createElement('button');
+            closeBtn.innerHTML = '×';
+            closeBtn.className = 'ml-2 text-lg leading-none hover:opacity-70';
+            closeBtn.onclick = () => notification.remove();
+            notification.appendChild(closeBtn);
+
+            // Add to DOM
+            document.body.appendChild(notification);
+
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        /**
+         * Get notification CSS classes based on type
+         */
+        getNotificationClasses(type) {
+            const classes = {
+                success: 'bg-green-500 text-white',
+                error: 'bg-red-500 text-white',
+                warning: 'bg-yellow-500 text-black',
+                info: 'bg-blue-500 text-white'
+            };
+            return classes[type] || classes.info;
+        }
+
+        /**
+         * Escape HTML to prevent XSS
+         */
+        escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.toString().replace(/[&<>"']/g, m => map[m]);
+        }
+        }
+
+        /**
+         * Initialize the application when DOM is loaded
+         */
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const app = new AttendanceApp();
+                await app.init();
+
+                // Make app globally available for debugging (optional)
+                window.attendanceApp = app;
+
+                console.log('App ready! No default selections should be visible.');
+            } catch (error) {
+                console.error('Failed to initialize attendance app:', error);
+                alert('Failed to load the application. Please refresh the page.');
+            }
+        });
+    </script>
+
+    <!-- Fallback for browsers that don't support modules -->
+    <script nomodule>
+        alert('Your browser does not support ES6 modules. Please use a modern browser like Chrome, Firefox, Safari, or Edge.');
+    </script>
+
+</body>
+
+</html>
