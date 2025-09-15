@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UniERP - My Courses</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="../client_Side_backup/styles/courses.css" />
+  <link rel="stylesheet" href="../client_Side_backup/styles/sidebar.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/yourkit.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <div id="sidebar-container"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Header -->
+      <header class="header">
+        <div>
+          <h2>My Courses</h2>
+          <p>Manage your enrolled courses and academic progress</p>
+        </div>
+        <button class="btn"><i class="fas fa-book-open"></i> Course Catalog</button>
+      </header>
+
+      <!-- Stats Section -->
+      <section class="stats">
+        <div class="card">
+          <h4>Total Courses</h4>
+          <p class="highlight">6</p>
+          <small>This semester</small>
+        </div>
+        <div class="card">
+          <h4>Total Credits</h4>
+          <p class="highlight">18</p>
+          <small>Credit hours</small>
+        </div>
+        <div class="card">
+          <h4>Average Progress</h4>
+          <p class="highlight">73%</p>
+          <div class="progress">
+            <div class="bar" style="width:73%"></div>
+          </div>
+        </div>
+        <div class="card">
+          <h4>Next Class</h4>
+          <p class="highlight">Tomorrow</p>
+          <small>MATH301 • 9:00 AM</small>
+        </div>
+      </section>
+
+      <!-- Grid Section -->
+      <section class="grid">
+        <!-- Enrolled Courses -->
+        <div class="box">
+          <h3>Enrolled Courses</h3>
+
+          <div class="course-card">
+            <h4>Advanced Mathematics <span class="status">In Progress</span></h4>
+            <p class="course-code">MATH301 • 4 Credits</p>
+            <p class="label">Progress</p>
+            <div class="progress">
+              <div class="bar" style="width:75%"></div>
+            </div>
+            <div class="course-meta">
+              <span><i class="fas fa-chalkboard-teacher"></i> Dr. Sarah Johnson</span>
+              <span><i class="fas fa-clock"></i> Mon, 9:00 AM</span>
+            </div>
+            <button class="btn small">View Course Details</button>
+          </div>
+
+          <div class="course-card">
+            <h4>Computer Science Fundamentals <span class="status">In Progress</span></h4>
+            <p class="course-code">CS101 • 3 Credits</p>
+            <p class="label">Progress</p>
+            <div class="progress">
+              <div class="bar" style="width:85%"></div>
+            </div>
+            <div class="course-meta">
+              <span><i class="fas fa-chalkboard-teacher"></i> Prof. Michael Chen</span>
+              <span><i class="fas fa-clock"></i> Tue, 2:00 PM</span>
+            </div>
+            <button class="btn small">View Course Details</button>
+          </div>
+        </div>
+
+        <!-- Course Materials -->
+        <div class="box">
+          <h3>Course Materials</h3>
+          <div class="tabs">
+            <button class="tab active" onclick="openTab('syllabus')"><i class="fas fa-list-alt"></i> Syllabus</button>
+            <button class="tab" onclick="openTab('resources')"><i class="fas fa-file-alt"></i> Resources</button>
+          </div>
+
+          <!-- Syllabus -->
+          <div id="syllabus" class="tab-content active">
+            <div class="syllabus-cards">
+              <div class="syllabus-card"><i class="fas fa-book"></i> Introduction to Calculus</div>
+              <div class="syllabus-card"><i class="fas fa-book"></i> Differential Equations</div>
+              <div class="syllabus-card"><i class="fas fa-book"></i> Linear Algebra</div>
+              <div class="syllabus-card"><i class="fas fa-book"></i> Statistics and Probability</div>
+              <div class="syllabus-card"><i class="fas fa-book"></i> Advanced Integration Techniques</div>
+
+            </div>
+          </div>
+
+          <!-- Resources -->
+          <div id="resources" class="tab-content">
+            <div class="resource-card"><i class="fas fa-file-pdf"></i> Course Textbook - Advanced Mathematics.pdf <i
+                class="fas fa-download download"></i></div>
+            <div class="resource-card"><i class="fas fa-file-pdf"></i> Lecture Notes - Week 1-5.pdf <i
+                class="fas fa-download download"></i></div>
+            <div class="resource-card"><i class="fas fa-file-pdf"></i> Practice Problems Set 1.pdf <i
+                class="fas fa-download download"></i></div>
+            <div class="resource-card"><i class="fas fa-file-archive"></i> Reference Materials.zip <i
+                class="fas fa-download download"></i></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quick Actions -->
+      <section class="box quick-chats">
+        <h3>Quick Actions</h3>
+        <div class="quick-action"><i class="fas fa-calendar-alt"></i><span>View Class Schedule</span></div>
+        <div class="quick-action"><i class="fas fa-file-alt"></i><span>Download Syllabus</span></div>
+        <div class="quick-action"><i class="fas fa-share-square"></i><span>Course Evaluation</span></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="sidebar-loader.js"></script>
+  <script src="courses.js"></script>
+</body>
+
+</html>

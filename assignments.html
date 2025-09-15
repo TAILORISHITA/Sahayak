@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniERP - Assignments</title>
+
+  <!-- Tailwind CSS CDN for styling -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --secondary-color: #e5e7eb;
+      --primary-text: #1f2937;
+      --secondary-text: #6b7280;
+      --border-color: #d1d5db;
+      --bg-color: #f9fafb;
+      --card-bg: #ffffff;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--primary-text);
+      background-color: var(--bg-color);
+      line-height: 1.6;
+    }
+
+    .app-container {
+      display: flex;
+      width: 100%;
+    }
+
+    .sidebar {
+      display: none;
+    }
+
+    @media (min-width: 768px) {
+      .sidebar {
+        display: block;
+        width: 16rem;
+        background: #111827;
+        color: white;
+        padding: 1.5rem;
+        height: 100vh;
+      }
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 2rem;
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 50;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 0.75rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      max-width: 32rem;
+      width: 100%;
+      padding: 2rem;
+    }
+
+    .modal h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100">
+  <div class="app-container">
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar">
+      <div class="h-full flex flex-col">
+        <h1 class="text-xl font-bold mb-8">UniERP</h1>
+        <ul class="space-y-4">
+          <li><a href="#" class="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path
+                  d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+              </svg>
+              <span>Dashboard</span>
+            </a></li>
+          <li><a href="#" class="flex items-center space-x-3 text-white transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path
+                  d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
+              </svg>
+              <span>Assignments</span>
+            </a></li>
+          <li><a href="#" class="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M4 4a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2H4zm10 2a2 2 0 100 4 2 2 0 000-4zm-4 0a2 2 0 100 4 2 2 0 000-4zM4 6a2 2 0 114 0 2 2 0 01-4 0z"
+                  clip-rule="evenodd" />
+              </svg>
+              <span>Courses</span>
+            </a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <header class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+        <h2>Assignments</h2>
+        <button
+          class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold shadow-md hover:bg-indigo-700 transition-colors duration-200 cursor-pointer"
+          id="submitAssignmentBtn">+ Submit Assignment</button>
+      </header>
+
+      <!-- Stats -->
+      <div class="grid grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+          <h3 class="text-sm text-gray-500 font-medium uppercase tracking-wide">Total Assignments</h3>
+          <p class="text-3xl font-bold mt-2" id="totalAssignments">0</p>
+          <span>This semester</span>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+          <h3 class="text-sm text-gray-500 font-medium uppercase tracking-wide">Pending</h3>
+          <p class="text-3xl font-bold mt-2 text-orange-500" id="pendingAssignments">0</p>
+          <span>Due soon</span>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+          <h3 class="text-sm text-gray-500 font-medium uppercase tracking-wide">Submitted</h3>
+          <p class="text-3xl font-bold mt-2 text-green-500" id="submittedAssignments">0</p>
+          <span>Completed</span>
+        </div>
+      </div>
+
+      <!-- Search + Filter -->
+      <div class="flex items-center gap-4 mb-8">
+        <input type="text" placeholder="Search assignments..." id="searchInput"
+          class="flex-1 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <button
+          class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg font-semibold hover:bg-gray-300 transition-colors duration-200 cursor-pointer"
+          id="filterBtn">Filter</button>
+      </div>
+
+      <!-- Tabs -->
+      <div class="flex flex-wrap gap-2 mb-6">
+        <button class="tab active px-4 py-2 rounded-lg font-medium text-white bg-indigo-600" data-tab="pending"
+          id="pendingTab">Pending</button>
+        <button class="tab px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-gray-200" data-tab="submitted"
+          id="submittedTab">Submitted</button>
+        <button class="tab px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-gray-200" data-tab="all"
+          id="allTab">All Assignments</button>
+      </div>
+
+      <!-- Tab Contents -->
+      <div class="tab-content active" id="pending"></div>
+      <div class="tab-content" id="submitted"></div>
+      <div class="tab-content" id="all"></div>
+
+      <!-- Quick Upload -->
+      <section class="quick-upload bg-white p-6 rounded-xl shadow-sm border border-gray-200 mt-6 hidden">
+        <h3>Quick Upload</h3>
+        <p>Upload assignment files</p>
+        <select id="assignmentSelect" class="w-full p-3 rounded-lg border border-gray-300 mt-2">
+          <option value="">Select Assignment</option>
+        </select>
+        <div class="upload-box mt-4 p-8 border-2 border-dashed border-gray-300 rounded-lg text-center text-gray-500">
+          <p>Drag and drop your files here, or click to browse</p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Modals -->
+  <div id="detailsModal" class="modal-overlay">
+    <div class="modal">
+      <h3 id="detailsModalTitle"></h3>
+      <div id="detailsModalContent"></div>
+      <button class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg font-semibold hover:bg-gray-300 mt-6"
+        id="detailsModalCloseBtn">Close</button>
+    </div>
+  </div>
+
+  <div id="submitModal" class="modal-overlay">
+    <div class="modal">
+      <h3>Submit Assignment</h3>
+      <p class="text-gray-600 mb-4">Please enter your solution URL and confirm your submission.</p>
+      <div id="submitModalContent"></div>
+      <div class="mt-4">
+        <label for="solutionUrlInput" class="block text-sm font-medium text-gray-700">Solution URL</label>
+        <input type="url" id="solutionUrlInput"
+          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+          placeholder="e.g., https://drive.google.com/your-solution">
+      </div>
+      <div class="flex justify-end gap-4 mt-6">
+        <button class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg font-semibold hover:bg-gray-300"
+          id="submitModalCancelBtn">Cancel</button>
+        <button class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold shadow-md hover:bg-indigo-700"
+          id="confirmSubmitBtn">Confirm Submission</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="successModal" class="modal-overlay">
+    <div class="modal text-center">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-green-500 mb-4" viewBox="0 0 20 20"
+        fill="currentColor">
+        <path fill-rule="evenodd"
+          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+          clip-rule="evenodd" />
+      </svg>
+      <h3 class="text-2xl font-bold">Submission Successful!</h3>
+      <p class="text-gray-600 mt-2">Your assignment has been submitted successfully.</p>
+      <button class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold shadow-md hover:bg-indigo-700 mt-6"
+        id="successModalOkBtn">OK</button>
+    </div>
+  </div>
+
+  <div id="errorModal" class="modal-overlay">
+    <div class="modal text-center">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-red-500 mb-4" viewBox="0 0 20 20"
+        fill="currentColor">
+        <path fill-rule="evenodd"
+          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+          clip-rule="evenodd" />
+      </svg>
+      <h3 class="text-2xl font-bold">Submission Failed</h3>
+      <p class="text-gray-600 mt-2">There was an error submitting your assignment. Please try again.</p>
+      <button class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold shadow-md hover:bg-indigo-700 mt-6"
+        id="errorModalOkBtn">OK</button>
+    </div>
+  </div>
+
+  <script type="module">
+    // Firebase SDK imports
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, collection, onSnapshot, doc, getDoc, updateDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+
+    // Set Firebase log level for debugging
+    setLogLevel('debug');
+
+    // Global variables for Firebase services and user data
+    let db, auth;
+    let userId;
+    let userEmail;
+    let assignments = [];
+    let currentAssignmentIdToSubmit;
+    let studentsCollectionName = "students";
+
+    // Global variables provided by the Canvas environment
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+    const firebaseConfig = {
+      apiKey: "AIzaSyDWVxMKaOjD10i87pX-kF6bPG8HbUNwGCY",
+      authDomain: "unierp-79b03.firebaseapp.com",
+      projectId: "unierp-79b03",
+      storageBucket: "unierp-79b03.firebaseapp.com",
+      messagingSenderId: "62493715652",
+      appId: "1:62493715652:web:72e922ae35048dbd40ad91",
+      measurementId: "G-GW9W07608T"
+    };
+
+    // Show a modal by ID
+    function showModal(id) {
+      document.getElementById(id).classList.add('active');
+    }
+
+    // Hide a modal by ID
+    function hideModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    // Initialize Firebase
+    if (Object.keys(firebaseConfig).length > 0) {
+      const app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
+      auth = getAuth(app);
+    } else {
+      console.error("Firebase config is not defined. Cannot initialize Firebase.");
+    }
+
+    // Get the user ID and listen for auth state changes
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        userId = user.uid;
+        userEmail = await fetchStudentEmail(userId);
+        startListeningForAssignments();
+      } else {
+        try {
+          if (typeof __initial_auth_token !== 'undefined') {
+            await signInWithCustomToken(auth, __initial_auth_token);
+          } else {
+            await signInAnonymously(auth);
+          }
+        } catch (error) {
+          console.error("Firebase Auth Error:", error);
+        }
+      }
+    });
+
+    // Function to fetch the student's email from Firestore
+    async function fetchStudentEmail(studentId) {
+      try {
+        const currentUser = auth.currentUser;
+        if (currentUser && currentUser.email) {
+          console.log("Using Firebase Auth email:", currentUser.email);
+          return currentUser.email;
+        }
+
+        const studentsRef = collection(db, "students");
+        const q = query(studentsRef, where("uid", "==", studentId));
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          const studentDoc = querySnapshot.docs[0];
+          const email = studentDoc.data().email || studentDoc.id;
+          console.log("Student Email found:", email);
+          return email;
+        }
+        console.warn("No student document found for uid:", studentId);
+        return "anonymous@example.com";
+      } catch (error) {
+        console.error("Error fetching student email:", error);
+        return "anonymous@example.com";
+      }
+    }
+
+    // Start listening for real-time changes to the assignments collection
+    function startListeningForAssignments() {
+      const q = collection(db, 'assignments');
+
+      onSnapshot(q, (snapshot) => {
+        assignments = [];
+        snapshot.forEach((doc) => {
+          assignments.push({ id: doc.id, ...doc.data() });
+        });
+        renderAssignments();
+      }, (error) => {
+        console.error("Error fetching assignments:", error);
+      });
+    }
+
+    // Render assignments to the DOM
+    function renderAssignments() {
+      const pendingContainer = document.getElementById('pending');
+      const submittedContainer = document.getElementById('submitted');
+      const allContainer = document.getElementById('all');
+      const assignmentSelect = document.getElementById('assignmentSelect');
+
+      pendingContainer.innerHTML = '';
+      submittedContainer.innerHTML = '';
+      allContainer.innerHTML = '';
+      assignmentSelect.innerHTML = '<option value="">Select Assignment</option>';
+
+      let totalCount = 0;
+      let pendingCount = 0;
+      let submittedCount = 0;
+
+      assignments.forEach(assignment => {
+        const isSubmitted = assignment.submittedArray?.some(submission => submission.email === userEmail);
+        const cardHtml = createAssignmentCard(assignment, isSubmitted);
+
+        allContainer.insertAdjacentHTML('beforeend', cardHtml);
+        assignmentSelect.innerHTML += `<option value="${assignment.id}">${assignment.title}</option>`;
+
+        if (isSubmitted) {
+          submittedContainer.insertAdjacentHTML('beforeend', cardHtml);
+          submittedCount++;
+        } else {
+          pendingContainer.insertAdjacentHTML('beforeend', cardHtml);
+          pendingCount++;
+        }
+        totalCount++;
+      });
+
+      // Update stats
+      document.getElementById('totalAssignments').innerText = totalCount;
+      document.getElementById('pendingAssignments').innerText = pendingCount;
+      document.getElementById('submittedAssignments').innerText = submittedCount;
+      document.getElementById('allTab').innerHTML = `All Assignments (${totalCount})`;
+      document.getElementById('pendingTab').innerHTML = `Pending (${pendingCount})`;
+      document.getElementById('submittedTab').innerHTML = `Submitted (${submittedCount})`;
+
+      // Attach event listeners to newly created buttons
+      attachButtonListeners();
+    }
+
+    // Create the HTML for an assignment card
+    function createAssignmentCard(assignment, isSubmitted) {
+      const tagsHtml = `
+                    ${assignment.priority ? `<span class="inline-block px-2 py-1 text-xs font-semibold rounded-full uppercase ${assignment.priority.toLowerCase()}">${assignment.priority}</span>` : ''}
+                    <span class="inline-block px-2 py-1 text-xs font-semibold rounded-full uppercase ${isSubmitted ? 'submitted' : 'pending'}">${isSubmitted ? 'Submitted' : 'Pending'}</span>
+                `;
+      const scoreHtml = isSubmitted && assignment.score ? `<span class="font-bold text-lg text-indigo-600 ml-2">${assignment.score}/100</span>` : '';
+      const submittedBy = assignment.submittedArray?.find(submission => submission.email === userEmail);
+      const submissionDate = (submittedBy && submittedBy.timestamp && submittedBy.timestamp.seconds) ? `Submitted: ${new Date(submittedBy.timestamp.seconds * 1000).toLocaleDateString()}` : '';
+      const dueDate = (assignment.dueDate && assignment.dueDate.seconds) ? `Due: ${new Date(assignment.dueDate.seconds * 1000).toLocaleDateString()}` : 'Due: N/A';
+
+      const metaHtml = `
+                    <p class="text-sm text-gray-500 mt-1">
+                        <strong>Course:</strong> ${assignment.course || 'N/A'} • <strong>Points:</strong> ${assignment.points || 'N/A'}
+                    </p>
+                    <p class="text-sm text-gray-500 mt-1">
+                        ${dueDate}
+                        ${submissionDate ? ` • ${submissionDate}` : ''}
+                    </p>
+                `;
+
+      const actionsHtml = isSubmitted ? `
+                    <button class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg font-semibold hover:bg-gray-300 transition-colors duration-200 view-details-btn" data-id="${assignment.id}">View Submission</button>
+                    <button class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold shadow-md hover:bg-indigo-700 transition-colors duration-200 resubmit-btn" data-id="${assignment.id}">Resubmit</button>
+                ` : `
+                    <button class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg font-semibold hover:bg-gray-300 transition-colors duration-200 view-details-btn" data-id="${assignment.id}">View Details</button>
+                    <a href="${assignment.googleDriveUrl}" target="_blank" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg font-semibold hover:bg-gray-300 transition-colors duration-200">Download</a>
+                    <button class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold shadow-md hover:bg-indigo-700 transition-colors duration-200 submit-btn" data-id="${assignment.id}">Submit</button>
+                `;
+
+      return `
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition-transform duration-200 hover:scale-[1.01]" data-id="${assignment.id}">
+                        <div class="flex-1">
+                            <h4 class="text-lg font-semibold flex items-center gap-2">
+                                ${assignment.title || 'N/A'} ${tagsHtml} ${scoreHtml}
+                            </h4>
+                            <p class="text-gray-500 text-sm mt-1">${assignment.description || 'N/A'}</p>
+                            ${metaHtml}
+                        </div>
+                        <div class="flex-shrink-0 flex flex-col sm:flex-row gap-2 mt-4 md:mt-0">
+                            ${actionsHtml}
+                        </div>
+                    </div>
+                `;
+    }
+
+    // Attach event listeners to dynamically created buttons
+    function attachButtonListeners() {
+      // View Details buttons
+      document.querySelectorAll('.view-details-btn').forEach(button => {
+        button.addEventListener('click', () => {
+          const id = button.dataset.id;
+          const assignment = assignments.find(a => a.id === id);
+          if (assignment) {
+            document.getElementById('detailsModalTitle').innerText = assignment.title;
+            const submittedBy = assignment.submittedArray?.find(submission => submission.email === userEmail);
+            const dueDateText = (assignment.dueDate && assignment.dueDate.seconds) ? new Date(assignment.dueDate.seconds * 1000).toLocaleDateString() : 'N/A';
+            const submissionUrlText = submittedBy ? submittedBy.solutionUrl : 'N/A';
+            const submissionUrlLink = submittedBy ? `<a href="${submittedBy.solutionUrl}" target="_blank" class="text-indigo-600 hover:underline break-all">${submittedBy.solutionUrl}</a>` : 'N/A';
+            const submittedEmails = assignment.submittedArray ? assignment.submittedArray.map(s => s.email).join(', ') : 'None';
+
+            document.getElementById('detailsModalContent').innerHTML = `
+                                <p><strong>Course:</strong> ${assignment.course || 'N/A'}</p>
+                                <p><strong>Description:</strong> ${assignment.description || 'N/A'}</p>
+                                <p><strong>Due Date:</strong> ${dueDateText}</p>
+                                <p><strong>Points:</strong> ${assignment.points || 'N/A'}</p>
+                                <p><strong>Status:</strong> ${submittedBy ? 'Submitted' : 'Pending'}</p>
+                                <p><strong>Your Submission URL:</strong> ${submissionUrlLink}</p>
+                                <p><strong>Submitted by:</strong> ${submittedEmails}</p>
+                            `;
+            showModal('detailsModal');
+          }
+        });
+      });
+
+      // Submit and Resubmit buttons
+      document.querySelectorAll('.submit-btn, .resubmit-btn').forEach(button => {
+        button.addEventListener('click', () => {
+          currentAssignmentIdToSubmit = button.dataset.id;
+          const assignment = assignments.find(a => a.id === currentAssignmentIdToSubmit);
+          document.getElementById('submitModalContent').innerHTML = `
+                            <p>Are you sure you want to submit <strong>${assignment.title}</strong>?</p>
+                            <p class="text-sm text-gray-500 mt-2">
+                                <a href="${assignment.googleDriveUrl}" target="_blank" class="text-indigo-600 hover:underline">View the assignment here</a>
+                            </p>
+                        `;
+          showModal('submitModal');
+        });
+      });
+    }
+
+    // Modal Close Buttons
+    document.getElementById('detailsModalCloseBtn').addEventListener('click', () => hideModal('detailsModal'));
+    document.getElementById('submitModalCancelBtn').addEventListener('click', () => hideModal('submitModal'));
+    document.getElementById('successModalOkBtn').addEventListener('click', () => hideModal('successModal'));
+    document.getElementById('errorModalOkBtn').addEventListener('click', () => hideModal('errorModal'));
+
+    // Confirm submission button inside the modal (attached once)
+    document.getElementById('confirmSubmitBtn').addEventListener('click', async () => {
+        if (!currentAssignmentIdToSubmit || !auth.currentUser) {
+          console.error("Submission failed: Missing assignment ID or user.");
+          return;
+        }
+
+        const solutionUrl = document.getElementById('solutionUrlInput').value;
+        if (!solutionUrl) {
+          document.getElementById('errorModal').querySelector('h3').innerText = 'Invalid Input';
+          document.getElementById('errorModal').querySelector('p').innerText = 'Please enter a valid solution URL.';
+          showModal('errorModal');
+          return;
+        }
+
+        const assignmentRef = doc(db, 'assignments', currentAssignmentIdToSubmit);
+        const submissionObject = {
+          email: userEmail || 'anonymous',
+          solutionUrl: solutionUrl,
+          timestamp: new Date()
+        };
+
+        try {
+          const assignmentDoc = await getDoc(assignmentRef);
+          const currentSubmissions = assignmentDoc.data().submittedArray || [];
+          const updatedSubmissions = currentSubmissions.filter(sub => sub.email !== submissionObject.email);
+          updatedSubmissions.push(submissionObject);
+
+          await updateDoc(assignmentRef, {
+            submittedArray: updatedSubmissions
+          });
+
+          console.log(`Successfully submitted assignment ${currentAssignmentIdToSubmit}`);
+          hideModal('submitModal');
+          showModal('successModal');
+        } catch (error) {
+          console.error("Error submitting assignment:", error);
+          hideModal('submitModal');
+          document.getElementById('errorModal').querySelector('h3').innerText = 'Submission Failed';
+          document.getElementById('errorModal').querySelector('p').innerText = 'There was an error submitting your assignment. Please try again.';
+          showModal('errorModal');
+        }
+    });
+
+
+    // Tab filtering logic
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active', 'bg-indigo-600', 'text-white'));
+        tabs.forEach(t => t.classList.add('text-gray-700', 'hover:bg-gray-200'));
+        tab.classList.add('active', 'bg-indigo-600', 'text-white');
+        tab.classList.remove('text-gray-700', 'hover:bg-gray-200');
+
+        const targetTab = tab.dataset.tab;
+        tabContents.forEach(content => {
+          if (content.id === targetTab) {
+            content.classList.add('active');
+          } else {
+            content.classList.remove('active');
+          }
+        });
+      });
+    });
+
+    // Initial page load, wait for auth to fetch data
+    document.addEventListener('DOMContentLoaded', () => {
+      // Event listener for the main "Submit Assignment" button
+      document.getElementById('submitAssignmentBtn').addEventListener('click', () => {
+        document.querySelector('.quick-upload').classList.toggle('hidden');
+      });
+    });
+  </script>
+</body>
+
+</html>

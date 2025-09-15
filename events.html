@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniERP Student Portal - Events</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../client_Side_backup/styles/events.css">
+  <link rel="stylesheet" href="../client_Side_backup/styles/sidebar.css">
+</head>
+
+<body class="flex min-h-screen">
+  <!-- Sidebar -->
+  <div id="sidebar-container"></div>
+
+  <!-- Main content -->
+  <div class="flex-1 flex flex-col">
+    <!-- Top bar -->
+    <header class="bg-white p-4 flex justify-between items-center shadow-md">
+      <h1 class="text-2xl font-semibold text-gray-800">Events & Seminars</h1>
+      <div class="flex items-center space-x-4"></div>
+    </header>
+
+    <!-- Main content area -->
+    <main class="flex-1 p-8 overflow-y-auto scrollbar-hide">
+      <!-- Summary cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Upcoming -->
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex items-center space-x-4">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+            <rect x="4" y="6" width="16" height="14" rx="2" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round"
+              stroke-linejoin="round" />
+            <path d="M8 4V8" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M16 4V8" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M4 10H20" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <div>
+            <p class="text-2xl font-bold text-gray-800">4</p>
+            <p class="text-sm text-gray-500">Upcoming Events</p>
+          </div>
+        </div>
+        <!-- My Registrations -->
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex items-center space-x-4">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="9" stroke="#10b981" stroke-width="1.5" />
+            <path d="M8 12L11 15L16 10" stroke="#10b981" stroke-width="1.5" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+          <div>
+            <p class="text-2xl font-bold text-gray-800">3</p>
+            <p class="text-sm text-gray-500">My Registrations</p>
+          </div>
+        </div>
+        <!-- This Week -->
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex items-center space-x-4">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+            <path d="M12 8C12 8 16 6 16 12C16 18 12 16 12 16" stroke="#f97316" stroke-width="1.5" stroke-linecap="round"
+              stroke-linejoin="round" />
+            <circle cx="12" cy="12" r="10" stroke="#f97316" stroke-width="1.5" />
+          </svg>
+          <div>
+            <p class="text-2xl font-bold text-gray-800">2</p>
+            <p class="text-sm text-gray-500">This Week</p>
+          </div>
+        </div>
+        <!-- Notifications -->
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex items-center space-x-4">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="10" stroke="#ef4444" stroke-width="1.5" />
+            <path d="M12 17V12" stroke="#ef4444" stroke-width="1.5" />
+            <path d="M12 7H12.01" stroke="#ef4444" stroke-width="1.5" />
+          </svg>
+          <div>
+            <p class="text-2xl font-bold text-gray-800">5</p>
+            <p class="text-sm text-gray-500">Notifications</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+        <!-- Tabs wrapper -->
+        <div class="relative border-b border-gray-200 mb-6">
+          <div class="flex space-x-6" id="tabs-wrapper">
+            <button id="upcoming-tab" class="tab-button active">Upcoming Events</button>
+            <button id="registered-tab" class="tab-button">My Registered Events</button>
+            <button id="past-tab" class="tab-button">Past Events</button>
+          </div>
+          <!-- Movable blue underline -->
+          <span class="tab-indicator absolute bottom-0 h-0.5 bg-blue-600"></span>
+        </div>
+
+        <!-- Upcoming Events -->
+        <div id="upcoming-events-content">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Example upcoming cards -->
+            <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+              <h3 class="text-lg font-semibold text-gray-800">AI & Machine Learning Workshop</h3>
+              <p class="text-sm text-gray-500 mb-2">Hands-on workshop covering fundamentals of AI and ML.</p>
+              <div class="text-xs text-gray-500 mb-4 space-y-1">
+                <p>3/25/2024 • 10:00 AM - 4:00 PM</p>
+                <p>Computer Lab 205</p>
+                <p>25/50 registered</p>
+              </div>
+              <div class="flex space-x-3">
+                <button class="flex-1 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700">
+                  Register Now</button>
+                <button class="bg-gray-200 text-gray-700 py-2 px-4 rounded-lg font-medium hover:bg-gray-300">
+                  Details</button>
+              </div>
+            </div>
+            <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+              <h3 class="text-lg font-semibold text-gray-800">Career Fair 2024</h3>
+              <p class="text-sm text-gray-500 mb-2">Meet with top employers and explore opportunities.</p>
+              <div class="text-xs text-gray-500 mb-4 space-y-1">
+                <p>3/30/2024 • 9:00 AM - 5:00 PM</p>
+                <p>Main Auditorium</p>
+                <p>254/500 registered</p>
+              </div>
+              <div class="flex space-x-3">
+                <button class="flex-1 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700">
+                  Register Now</button>
+                <button class="bg-gray-200 text-gray-700 py-2 px-4 rounded-lg font-medium hover:bg-gray-300">
+                  Details</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- My Registered Events -->
+        <div id="registered-events-content" class="hidden">
+          <p class="text-sm text-gray-500 mb-4">Events you've registered for</p>
+          <div class="space-y-4">
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 flex items-center justify-between">
+              <div>
+                <h4 class="text-base font-semibold text-gray-800">AI & Machine Learning Workshop</h4>
+                <p class="text-xs text-gray-500">3/25/2024 • 10:00 AM - 4:00 PM • Computer Lab 205</p>
+              </div>
+              <div class="flex space-x-2">
+                <button class="bg-gray-200 text-gray-700 py-2 px-4 rounded-lg font-medium text-sm hover:bg-gray-300">
+                  View Ticket</button>
+                <button class="bg-red-50 text-red-700 py-2 px-4 rounded-lg font-medium text-sm hover:bg-red-100">
+                  Cancel</button>
+              </div>
+            </div>
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 flex items-center justify-between">
+              <div>
+                <h4 class="text-base font-semibold text-gray-800">Career Fair 2024</h4>
+                <p class="text-xs text-gray-500">3/30/2024 • 9:00 AM - 5:00 PM • Main Auditorium</p>
+              </div>
+              <div class="flex space-x-2">
+                <button class="bg-gray-200 text-gray-700 py-2 px-4 rounded-lg font-medium text-sm hover:bg-gray-300">
+                  View Ticket</button>
+                <button class="bg-red-50 text-red-700 py-2 px-4 rounded-lg font-medium text-sm hover:bg-red-100">
+                  Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Past Events -->
+        <div id="past-events-content" class="hidden">
+          <p class="text-sm text-gray-500 mb-4">Completed events and feedback</p>
+          <div class="space-y-4">
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 flex items-center justify-between">
+              <div>
+                <h4 class="text-base font-semibold text-gray-800">Entrepreneurship Summit</h4>
+                <p class="text-xs text-gray-500">3/15/2024 • 180 attendees</p>
+              </div>
+              <div class="flex items-center space-x-4">
+                <div class="text-right">
+                  <p class="text-xs text-gray-500">Rating: 4.8/5</p>
+                  <p class="text-xs font-semibold text-green-600">Completed</p>
+                </div>
+                <button class="bg-gray-200 text-gray-700 py-2 px-4 rounded-lg font-medium text-sm hover:bg-gray-300">
+                  Details</button>
+              </div>
+            </div>
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 flex items-center justify-between">
+              <div>
+                <h4 class="text-base font-semibold text-gray-800">Science Exhibition</h4>
+                <p class="text-xs text-gray-500">3/10/2024 • 250 attendees</p>
+              </div>
+              <div class="flex items-center space-x-4">
+                <div class="text-right">
+                  <p class="text-xs text-gray-500">Rating: 4.6/5</p>
+                  <p class="text-xs font-semibold text-green-600">Completed</p>
+                </div>
+                <button class="bg-gray-200 text-gray-700 py-2 px-4 rounded-lg font-medium text-sm hover:bg-gray-300">
+                  Details</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="sidebar-loader.js"></script>
+  <script src="events.js"></script>
+</body>
+
+</html>

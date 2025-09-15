@@ -1,0 +1,187 @@
+<!-- logo updation -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniERP - Campus Info</title>
+  <link rel="stylesheet" href="../client_Side_backup/styles/campusinformation.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../client_Side_backup/styles/sidebar.css">
+</head>
+
+<body>
+  <aside class="sidebar" aria-label="Sidebar navigation">
+    <div class="logo">
+      <div class="logo-text">
+        <h2>UniERP</h2>
+        <span>University Management</span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu">
+        <li onclick="location.href='dashboard.html'"><i class="fas fa-home"></i> Dashboard</li>
+        <li onclick="location.href='onboarding.html'"><i class="fas fa-user-graduate"></i> Onboarding</li>
+        <li onclick="location.href='courses.html'"><i class="fas fa-book"></i> Courses</li>
+        <li onclick="location.href='assignments.html'"><i class="fas fa-tasks"></i> Assignments</li>
+        <li onclick="location.href='grades.html'"><i class="fas fa-clipboard-check"></i> Grades</li>
+        <li onclick="location.href='attendance.html'"><i class="fas fa-calendar-check"></i> Attendance</li>
+        <li onclick="location.href='feepayment.html'"><i class="fas fa-credit-card"></i> Fees & Payments</li>
+        <li onclick="location.href='campusinformation.html'"><i class="fas fa-map"></i> Campus Info</li>
+        <li onclick="location.href='events.html'"><i class="fas fa-calendar-alt"></i> Events</li>
+        <li onclick="location.href='support.html'"><i class="fas fa-question-circle"></i> Support</li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="page-header">
+      <h1>Campus Information</h1>
+      <p>Explore our world-class facilities and accommodation options</p>
+      <button id="mapBtn"><i class="fa-solid fa-map"></i> Interactive Campus Map</button>
+    </header>
+
+    <!-- Campus Map Section -->
+    <section class="campus-map">
+      <div class="map-placeholder">
+        <i class="fa-solid fa-location-dot fa-2xl"></i>
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3669.7353772933643!2d72.59184811100438!3d23.10678091309309!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e83c959d4de6f%3A0x748d0828c02cf9fa!2sVishwakarma%20Government%20Engineering%20College!5e0!3m2!1sen!2sin!4v1757753266617!5m2!1sen!2sin"
+          width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <div class="map-tags">
+          <span class="badge"><i class="fa-solid fa-car"></i> Parking</span>
+          <span class="badge"><i class="fa-solid fa-wifi"></i> WiFi Zones</span>
+          <span class="badge"><i class="fa-solid fa-utensils"></i> Food Courts</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" data-tab="facilities">Facilities</button>
+      <button class="tab" data-tab="hostels">Hostels</button>
+      <button class="tab" data-tab="pgs">Nearby PGs</button>
+    </div>
+
+    <!-- Facilities Section -->
+    <section id="facilities" class="tab-content active">
+      <div class="card">
+        <h2><i class="fa-solid fa-book-open"></i> Central Library</h2>
+        <p>24/7 access with over 500,000 books and digital resources.</p>
+        <div class="badges">
+          <span class="badge">Digital Library</span>
+          <span class="badge">Study Rooms</span>
+          <span class="badge">Research Center</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2><i class="fa-solid fa-dumbbell"></i> Sports Complex</h2>
+        <p>State-of-the-art fitness facilities and sports courts.</p>
+        <div class="badges">
+          <span class="badge">Gymnasium</span>
+          <span class="badge">Swimming Pool</span>
+          <span class="badge">Football Field</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Hostels Section -->
+    <section id="hostels" class="tab-content">
+      <div class="card hostel">
+        <h2><i class="fa-solid fa-bed"></i> North Campus Hostel</h2>
+        <p class="subtitle">Boys Hostel • 0.2 km from main campus</p>
+        <div class="progress">
+          <div class="bar" style="width: 90%;"></div>
+        </div>
+        <p><strong>Occupancy:</strong> 450/500</p>
+        <div class="badges">
+          <span class="badge">WiFi</span>
+          <span class="badge">AC Rooms</span>
+          <span class="badge">Study Hall</span>
+        </div>
+        <div class="buttons">
+          <button class="primary">Apply</button>
+          <button class="outline">View Photos</button>
+        </div>
+      </div>
+
+      <div class="card hostel">
+        <h2><i class="fa-solid fa-bed"></i> South Campus Hostel</h2>
+        <p class="subtitle">Girls Hostel • 0.3 km from main campus</p>
+        <div class="progress">
+          <div class="bar" style="width: 95%;"></div>
+        </div>
+        <p><strong>Occupancy:</strong> 380/400</p>
+        <div class="badges">
+          <span class="badge">WiFi</span>
+          <span class="badge">Gym</span>
+          <span class="badge">Common Kitchen</span>
+        </div>
+        <div class="buttons">
+          <button class="primary">Apply</button>
+          <button class="outline">Virtual Tour</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PGs Section -->
+    <section id="pgs" class="tab-content">
+      <div class="pg-list">
+        <div class="card">
+          <h2><i class="fa-solid fa-building"></i> Comfort Stay PG</h2>
+          <p class="subtitle">$150/month • 1.2 km from campus</p>
+          <div class="badges">
+            <span class="badge">WiFi</span>
+            <span class="badge">Food</span>
+          </div>
+          <button class="primary">Contact Owner</button>
+        </div>
+
+        <div class="card">
+          <h2><i class="fa-solid fa-building"></i> Elite Residency</h2>
+          <p class="subtitle">$180/month • 0.8 km from campus</p>
+          <div class="badges">
+            <span class="badge">AC</span>
+            <span class="badge">Security</span>
+          </div>
+          <button class="primary">Contact Owner</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="sidebar-loader.js"></script>
+  <script src="campusinformation.js"></script>
+
+  <!-- Optional: auto-set active menu item based on current page.
+       Paste this into campusinformation.js or add as a small script here.
+       It reads the onclick values (location.href='file.html') and matches current pathname. -->
+  <script>
+    (function setActiveFromPath() {
+      try {
+        const items = document.querySelectorAll('.sidebar .menu li');
+        const path = location.pathname.split('/').pop() || 'index.html';
+        items.forEach(li => {
+          const onclick = li.getAttribute('onclick') || '';
+          const m = onclick.match(/location\.href\s*=\s*['"]([^'"]+)['"]/);
+          if (m) {
+            const href = m[1];
+            if (href === path) {
+              li.classList.add('active');
+            } else {
+              li.classList.remove('active');
+            }
+          }
+        });
+      } catch (e) {
+        // silent fail
+      }
+    })();
+  </script>
+</body>
+
+</html>

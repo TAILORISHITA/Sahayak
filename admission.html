@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UniERP - Assignments</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="../client_Side_backup/styles/sidebar.css">
+</head>
+
+<body class="flex font-[Inter]">
+  <!-- Sidebar (loaded dynamically) -->
+  <div id="sidebar-container"></div>
+
+  <!-- Main Content -->
+  <main class="flex-1 flex flex-col max-w-[960px]">
+    <div class="flex flex-wrap justify-between gap-3 p-6">
+      <p class="text-[#111418] tracking-light text-[32px] font-bold leading-tight min-w-72">Assignments</p>
+      <button
+        class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center rounded-lg h-8 px-4 bg-[#f0f2f4] text-[#111418] text-sm font-medium">
+        <span class="truncate">New Assignment</span>
+      </button>
+    </div>
+
+    <h2 class="text-[#111418] text-[22px] font-bold px-6 pb-3 pt-5">Create Assignment</h2>
+
+    <!-- Assignment Form -->
+    <div class="px-6 space-y-4 max-w-[600px]">
+      <!-- Title -->
+      <label class="flex flex-col">
+        <p class="text-base font-medium pb-2">Assignment Title</p>
+        <input type="text" placeholder="Enter assignment title"
+          class="form-input rounded-lg border border-[#dbe0e6] p-[15px] h-14" />
+      </label>
+
+      <!-- Description -->
+      <label class="flex flex-col">
+        <p class="text-base font-medium pb-2">Description</p>
+        <textarea placeholder="Enter assignment description"
+          class="form-input rounded-lg border border-[#dbe0e6] p-[15px] min-h-36"></textarea>
+      </label>
+
+      <!-- Course -->
+      <label class="flex flex-col">
+        <p class="text-base font-medium pb-2">Course</p>
+        <select class="form-input rounded-lg border border-[#dbe0e6] p-[15px] h-14">
+          <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+          <option value="Mechanical Engineering">Mechanical Engineering</option>
+          <option value="Business School">Business School</option>
+        </select>
+      </label>
+
+      <!-- Due Date -->
+      <label class="flex flex-col">
+        <p class="text-base font-medium pb-2">Due Date</p>
+        <input type="date" class="form-input rounded-lg border border-[#dbe0e6] p-[15px] h-14" />
+      </label>
+
+      <!-- Attachments -->
+      <label class="flex flex-col">
+        <p class="text-base font-medium pb-2">Attachments</p>
+        <input type="file" class="form-input rounded-lg border border-[#dbe0e6] p-[15px] h-14" />
+      </label>
+
+      <!-- Submit -->
+      <div class="flex justify-end pt-3">
+        <button class="flex items-center justify-center rounded-lg h-10 px-6 bg-[#1172d4] text-white text-sm font-bold">
+          Create Assignment
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Load Sidebar dynamically -->
+  <script>
+    fetch("sidebar.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("sidebar-container").innerHTML = data;
+
+        // highlight active page
+        const currentPage = window.location.pathname.split("/").pop();
+        document.querySelectorAll("#sidebar-container .menu a").forEach(link => {
+          if (link.getAttribute("href") === currentPage) {
+            link.querySelector("li").classList.add("active");
+          }
+        });
+      });
+  </script>
+</body>
+
+</html>

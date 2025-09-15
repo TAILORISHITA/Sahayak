@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en" x-data="{ activeTab: 'payment_history' }">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>UniERP — Fees & Payments</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../client_Side_backup/styles/feepayment.css" />
+  <link rel="stylesheet" href="../client_Side_backup/styles/sidebar.css" />
+</head>
+
+<body class="bg-gray-50 flex">
+
+  <div id="sidebar-container"></div>
+
+  <main>
+
+
+    <section class="max-w-7xl mx-auto px-6 py-8">
+      <div class="flex items-start justify-between gap-4 mb-6">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-800">Fees &amp; Payments</h1>
+          <p class="text-sm text-gray-500">Manage your fee payments and scholarships</p>
+        </div>
+        <div>
+          <button
+            class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md shadow">
+            <span class="material-icons">payment</span> Make Payment
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        <div class="bg-white border rounded-lg p-5 shadow-sm">
+          <div class="flex justify-between items-start">
+            <div class="text-sm text-gray-500">Total Fees</div>
+            <span class="material-icons text-blue-500">payments</span>
+          </div>
+          <div class="mt-4 text-2xl font-bold"> ₹
+            9,750</div>
+          <div class="text-xs text-gray-500 mt-1">This semester</div>
+        </div>
+
+        <div class="bg-white border rounded-lg p-5 shadow-sm">
+          <div class="flex justify-between items-start">
+            <div class="text-sm text-gray-500">Amount Paid</div>
+            <span class="material-icons text-green-500">check_circle</span>
+          </div>
+          <div class="mt-4 text-2xl font-bold text-green-600">₹
+            500</div>
+          <div class="text-xs text-gray-500 mt-1">5.1% completed</div>
+        </div>
+
+        <div class="bg-white border rounded-lg p-5 shadow-sm">
+          <div class="flex justify-between items-start">
+            <div class="text-sm text-gray-500">Amount Due</div>
+            <span class="material-icons text-amber-500">hourglass_top</span>
+          </div>
+          <div class="mt-4 text-2xl font-bold text-amber-500">₹
+            9,250</div>
+          <div class="text-xs text-gray-500 mt-1">Due: April 15, 2024</div>
+        </div>
+
+        <div class="bg-white border rounded-lg p-5 shadow-sm">
+          <div class="flex justify-between items-start">
+            <div class="text-sm text-gray-500">Scholarships</div>
+            <span class="material-icons text-green-500">military_tech</span>
+          </div>
+          <div class="mt-4 text-2xl font-bold text-green-600">₹
+            3,700</div>
+          <div class="text-xs text-gray-500 mt-1">Active awards</div>
+        </div>
+      </div>
+
+      <div class="bg-white border rounded-lg shadow-sm overflow-hidden">
+        <div class="bg-gray-50 px-4 sm:px-6">
+          <div class="max-w-7xl mx-auto">
+            <nav class="flex -mb-px space-x-1" role="tablist" aria-label="Tabs">
+              <button @click="activeTab='current_fees'"
+                :class="activeTab==='current_fees' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500'"
+                class="px-4 py-4 font-semibold">Current Fees</button>
+              <button @click="activeTab='payment_history'"
+                :class="activeTab==='payment_history' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500'"
+                class="px-4 py-4 font-semibold">Payment History</button>
+              <button @click="activeTab='scholarships'"
+                :class="activeTab==='scholarships' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500'"
+                class="px-4 py-4 font-semibold">Scholarships</button>
+              <button @click="activeTab='receipts'"
+                :class="activeTab==='receipts' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500'"
+                class="px-4 py-4 font-semibold">Receipts</button>
+            </nav>
+          </div>
+        </div>
+
+        <div class="p-6 max-w-7xl mx-auto">
+
+          <div x-show="activeTab==='current_fees'" x-cloak>
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Spring 2024 Fee Structure</h2>
+            <p class="text-sm text-gray-500 mb-4">Detailed breakdown of semester fees and payment status</p>
+
+            <div class="space-y-4">
+              <div class="border rounded-lg p-4 flex items-center justify-between">
+                <div>
+                  <div class="font-semibold">Laboratory Fee</div>
+                  <div class="text-xs text-gray-500">Due: 4/15/2024 · Status: Pending</div>
+                </div>
+                <div class="flex items-center space-x-4">
+                  <div class="text-lg font-bold">₹
+                    750</div>
+                  <span class="px-3 py-1 rounded-full text-xs bg-amber-100 text-amber-700">Pending</span>
+                </div>
+              </div>
+
+              <div class="border rounded-lg p-4 flex items-center justify-between">
+                <div>
+                  <div class="font-semibold">Library Fee</div>
+                  <div class="text-xs text-gray-500">Due: 4/15/2024 · Paid: 3/10/2024</div>
+                </div>
+                <div class="flex items-center space-x-4">
+                  <div class="text-lg font-bold">₹
+                    250</div>
+                  <span class="px-3 py-1 rounded-full text-xs bg-green-100 text-green-700">Paid</span>
+                </div>
+              </div>
+
+              <div class="border rounded-lg p-4 flex items-center justify-between">
+                <div>
+                  <div class="font-semibold">Sports &amp; Activities</div>
+                  <div class="text-xs text-gray-500">Due: 4/15/2024 · Paid: 3/10/2024</div>
+                </div>
+                <div class="flex items-center space-x-4">
+                  <div class="text-lg font-bold">₹
+                    300</div>
+                  <span class="px-3 py-1 rounded-full text-xs bg-green-100 text-green-700">Paid</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6 border-t pt-4 flex items-center justify-between">
+              <div class="text-lg font-semibold">Total Amount Due:</div>
+              <div class="flex items-center gap-4">
+                <div class="text-2xl font-bold text-amber-500">₹
+                  9,250</div>
+                <button class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-md">Pay All Pending Fees
+                  (₹
+                  9,250)</button>
+              </div>
+            </div>
+          </div>
+
+          <div x-show="activeTab==='payment_history'" x-cloak>
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Payment History</h2>
+            <p class="text-sm text-gray-500 mb-6">Complete record of your fee payments</p>
+
+            <div class="space-y-4">
+              <div class="border rounded-lg p-4 bg-white">
+                <div class="flex items-start justify-between gap-6">
+                  <div class="flex-1">
+                    <div class="flex items-center gap-3">
+                      <h3 class="font-semibold">Library Fee + Sports Fee</h3>
+                      <span class="px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-700">completed</span>
+                    </div>
+                    <div class="text-xs text-gray-500 mt-2">
+                      PAY-2024-001 · 3/10/2024
+                      <span class="mx-2">•</span> Payment Method: Credit Card
+                    </div>
+                  </div>
+
+                  <div class="text-right">
+                    <div class="text-2xl font-bold text-gray-800">₹
+                      500</div>
+                    <button onclick="downloadReceipt('PAY-2024-001')"
+                      class="mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-md border bg-white text-sm hover:bg-gray-50">
+                      <span class="material-icons text-base">download</span> Receipt
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="border rounded-lg p-4 bg-white">
+                <div class="flex items-start justify-between gap-6">
+                  <div class="flex-1">
+                    <div class="flex items-center gap-3">
+                      <h3 class="font-semibold">Fall 2023 Tuition Fee</h3>
+                      <span class="px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-700">completed</span>
+                    </div>
+                    <div class="text-xs text-gray-500 mt-2">
+                      PAY-2024-002 · 1/15/2024
+                      <span class="mx-2">•</span> Payment Method: Bank Transfer
+                    </div>
+                  </div>
+
+                  <div class="text-right">
+                    <div class="text-2xl font-bold text-gray-800">₹
+                      8,500</div>
+                    <button onclick="downloadReceipt('PAY-2024-002')"
+                      class="mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-md border bg-white text-sm hover:bg-gray-50">
+                      <span class="material-icons text-base">download</span> Receipt
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="border rounded-lg p-4 bg-white">
+                <div class="flex items-start justify-between gap-6">
+                  <div class="flex-1">
+                    <div class="flex items-center gap-3">
+                      <h3 class="font-semibold">Hostel Fee</h3>
+                      <span class="px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-700">completed</span>
+                    </div>
+                    <div class="text-xs text-gray-500 mt-2">
+                      PAY-2023-098 · 12/20/2023
+                      <span class="mx-2">•</span> Payment Method: UPI
+                    </div>
+                  </div>
+
+                  <div class="text-right">
+                    <div class="text-2xl font-bold text-gray-800">₹
+                      2,400</div>
+                    <button onclick="downloadReceipt('PAY-2023-098')"
+                      class="mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-md border bg-white text-sm hover:bg-gray-50">
+                      <span class="material-icons text-base">download</span> Receipt
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-8 border rounded-lg bg-white p-6">
+              <h3 class="text-lg font-semibold mb-1">Secure Payment Options</h3>
+              <p class="text-sm text-gray-500 mb-4">Multiple payment methods available for your convenience</p>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="border rounded-lg p-6 flex flex-col items-center text-center">
+                  <span class="material-icons text-3xl text-blue-600 mb-2">credit_card</span>
+                  <div class="font-semibold">Credit/Debit Card</div>
+                  <div class="text-sm text-gray-500">Visa, Mastercard, Amex</div>
+                </div>
+
+                <div class="border rounded-lg p-6 flex flex-col items-center text-center">
+                  <span class="material-icons text-3xl text-blue-600 mb-2">account_balance</span>
+                  <div class="font-semibold">Bank Transfer</div>
+                  <div class="text-sm text-gray-500">Direct bank payment</div>
+                </div>
+
+                <div class="border rounded-lg p-6 flex flex-col items-center text-center">
+                  <span class="material-icons text-3xl text-blue-600 mb-2">qr_code_2</span>
+                  <div class="font-semibold">UPI &amp; Digital</div>
+                  <div class="text-sm text-gray-500">PayPal, UPI, Wallet</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div x-show="activeTab==='scholarships'" x-cloak>
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Scholarships &amp; Awards</h2>
+            <p class="text-sm text-gray-500 mb-5">Details of your applied and awarded scholarships</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="space-y-3">
+                <h4 class="text-sm font-semibold text-gray-700">Active Awards</h4>
+                <div class="border rounded-lg p-4 bg-green-50 flex justify-between items-center">
+                  <div>
+                    <div class="font-semibold">Merit Scholarship</div>
+                    <div class="text-xs text-gray-600">Awarded for: Spring 2024</div>
+                  </div>
+                  <div class="font-bold text-green-600">₹
+                    2,500</div>
+                </div>
+
+                <div class="border rounded-lg p-4 bg-green-50 flex justify-between items-center">
+                  <div>
+                    <div class="font-semibold">University Grant</div>
+                    <div class="text-xs text-gray-600">Awarded for: Spring 2024</div>
+                  </div>
+                  <div class="font-bold text-green-600">₹
+                    1,200</div>
+                </div>
+              </div>
+
+              <div class="space-y-3">
+                <h4 class="text-sm font-semibold text-gray-700">Applied / Under Review</h4>
+                <div class="border rounded-lg p-4 flex justify-between items-center">
+                  <div>
+                    <div class="font-semibold">Alumni Scholarship</div>
+                    <div class="text-xs text-gray-600">Status: Under Review</div>
+                  </div>
+                  <div class="font-bold text-gray-800">₹
+                    1,000</div>
+                </div>
+
+                <h4 class="text-sm font-semibold text-gray-700 mt-4">Upcoming Scholarships</h4>
+                <div class="border rounded-lg p-4 bg-blue-50 flex justify-between items-center">
+                  <div>
+                    <div class="font-semibold">Research Excellence Grant</div>
+                    <div class="text-xs text-gray-600">Opens: Aug 2024</div>
+                  </div>
+                  <div class="font-bold text-blue-600">₹
+                    3,000</div>
+                </div>
+
+                <div class="border rounded-lg p-4 bg-blue-50 flex justify-between items-center">
+                  <div>
+                    <div class="font-semibold">Community Service Scholarship</div>
+                    <div class="text-xs text-gray-600">Opens: Sep 2024</div>
+                  </div>
+                  <div class="font-bold text-blue-600">₹
+                    1,500</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div x-show="activeTab==='receipts'" x-cloak>
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Payment Receipts</h2>
+            <p class="text-sm text-gray-500 mb-6">Download your payment receipts</p>
+
+            <div class="space-y-4">
+              <div class="border rounded-lg p-4 flex justify-between items-center">
+                <div>
+                  <div class="font-semibold">Receipt #2024-00123</div>
+                  <div class="text-xs text-gray-500">Date: Feb 15, 2024 · For: Tuition Fee Installment</div>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div class="text-lg font-bold">₹
+                    500</div>
+                  <button onclick="downloadReceipt('RCPT-2024-00123')"
+                    class="inline-flex items-center gap-2 px-3 py-1 rounded-md border hover:bg-gray-50">
+                    <span class="material-icons text-base">download</span> Download
+                  </button>
+                </div>
+              </div>
+
+              <div class="border rounded-lg p-4 flex justify-between items-center">
+                <div>
+                  <div class="font-semibold">Receipt #2023-00987</div>
+                  <div class="text-xs text-gray-500">Date: Sep 10, 2023 · For: Fall Lab Fee</div>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div class="text-lg font-bold">₹
+                    750</div>
+                  <button onclick="downloadReceipt('RCPT-2023-00987')"
+                    class="inline-flex items-center gap-2 px-3 py-1 rounded-md border hover:bg-gray-50">
+                    <span class="material-icons text-base">download</span> Download
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <button
+    class="fixed right-6 bottom-6 bg-gradient-to-br from-blue-400 to-cyan-400 w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-white">
+    <span class="material-icons">chat</span>
+  </button>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <script src="sidebar-loader.js"></script>
+  <script src="feepayment.js"></script>
+
+</body>
+
+</html>

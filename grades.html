@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal - Grades</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="stylesheet" href="../client_Side_backup/styles/grades.css">
+
+</head>
+
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div id="sidebar-container"></div>
+
+        <!-- Main -->
+        <div class="main">
+            <div class="topbar">
+                <!-- <h1>UniERP - Academic Grades</h1> -->
+                <button>Download Transcript</button>
+            </div>
+
+            <div class="content">
+                <!-- GPA Cards -->
+                <div class="cards">
+                    <div class="card">
+                        <h3>Current GPA</h3>
+                        <p>3.57</p>
+                    </div>
+                    <div class="card">
+                        <h3>CGPA</h3>
+                        <p>3.78</p>
+                    </div>
+                    <div class="card">
+                        <h3>Credits Earned</h3>
+                        <p>95</p>
+                    </div>
+                    <div class="card">
+                        <h3>Class Rank</h3>
+                        <p>12 / 245</p>
+                    </div>
+                </div>
+
+                <!-- Grades -->
+                <div class="grades">
+                    <h2>Spring 2024 Grades</h2>
+
+                    <div class="course">
+                        <div class="course-header">
+                            <span>Advanced Mathematics (MATH301)</span>
+                            <span>A - 92%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress" style="width:92%"></div>
+                        </div>
+                    </div>
+
+                    <div class="course">
+                        <div class="course-header">
+                            <span>Computer Science Fundamentals (CS101)</span>
+                            <span>A- - 88%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress" style="width:88%"></div>
+                        </div>
+                    </div>
+
+                    <div class="course">
+                        <div class="course-header">
+                            <span>Physics Laboratory (PHY201)</span>
+                            <span>B+ - 85%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress" style="width:85%"></div>
+                        </div>
+                    </div>
+
+                    <div class="course">
+                        <div class="course-header">
+                            <span>English Literature (ENG102)</span>
+                            <span>A - 90%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress" style="width:90%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GPA Trend -->
+                <div class="gpa-trend">
+                    <h2>GPA Trend Analysis</h2>
+                    <p>Interactive GPA trend chart will be displayed here.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="grades.js"></script>
+    <script src="sidebar-loader.js"></script>
+
+</body>
+
+</html>

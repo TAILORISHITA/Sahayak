@@ -1,0 +1,175 @@
+<!-- quick actions event listener  -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UniERP - Student Portal</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="../client_Side_backup/styles/sidebar.css" />
+  <link rel="stylesheet" href="../client_Side_backup/styles/dashboard.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        document.querySelector(".username").textContent = user.displayName || "Student";
+      }
+    });
+
+    async function loadNotifications() {
+      const notifRef = collection(db, "notifications");
+      const snapshot = await getDocs(notifRef);
+      const notifList = document.getElementById("notification-list");
+
+      notifList.innerHTML = "";
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        notifList.innerHTML += `
+          <div class="notification">
+            <span class="subject">${data.title}</span>
+            <p class="message">${data.message}</p>
+            <span class="timestamp">${new Date(data.timestamp.seconds * 1000).toLocaleString()}</span>
+          </div>
+        `;
+      });
+    }
+    window.loadNotifications = loadNotifications;
+  </script>
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" aria-label="Sidebar navigation">
+      <div class="logo">
+        UniERP <span>University Management</span>
+      </div>
+      <nav>
+        <ul class="menu">
+          <li class="active" onclick="location.href='../client_Side_backup/dashboard.html'"><i class="fas fa-home"></i>
+            Dashboard</li>
+          <li onclick="location.href='../client_Side_backup/onboarding.html'"><i class="fas fa-user-graduate"></i>
+            Onboarding</li>
+          <li onclick="location.href='../client_Side_backup/courses.html'"><i class="fas fa-book"></i> Courses</li>
+          <li onclick="location.href='../client_Side_backup/assignments.html'"><i class="fas fa-tasks"></i> Assignments
+          </li>
+          <li onclick="location.href='../client_Side_backup/grades.html'"><i class="fas fa-clipboard-check"></i> Grades
+          </li>
+          <li onclick="location.href='../client_Side_backup/attendance.html'"><i class="fas fa-calendar-check"></i>
+            Attendance</li>
+          <li onclick="location.href='../client_Side_backup/feespayment.html'"><i class="fas fa-credit-card"></i> Fees &
+            Payments</li>
+          <li onclick="location.href='../client_Side_backup/campus.html'"><i class="fas fa-map"></i> Campus Info</li>
+          <li onclick="location.href='../client_Side_backup/events.html'"><i class="fas fa-calendar-alt"></i> Events
+          </li>
+          <li onclick="location.href='../client_Side_backup/support.html'"><i class="fas fa-question-circle"></i>
+            Support</li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+
+      <!-- Header -->
+      <header class="header">
+        <div class="header-left">
+          <h2>Welcome Back, <span class="username">VibeCoding.exe</span>!</h2>
+          <p>Ready to continue your academic journey?</p>
+          <button class="btn" onclick="loadNotifications()">View Academic Progress</button>
+        </div>
+
+        <!-- Notification Widget on Right -->
+        <div class="header-right">
+          <div class="notification-widget">
+            <button id="notification-bell" class="notification-btn">
+              <i class="fas fa-bell"></i>
+              <span id="unread-count" class="unread-count hidden">0</span>
+            </button>
+            <div id="notification-panel" class="notification-panel hidden">
+              <h4>Notifications</h4>
+              <div id="notification-list" class="notification-list">
+                <div class="notification empty">No new notifications.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+
+      <!-- Stats Section -->
+      <section class="stats">
+        <div class="card">
+          <h4>Current GPA</h4>
+          <p class="highlight">4.12</p>
+          <small>+0.12 from last semester</small>
+        </div>
+        <div class="card">
+          <h4>Attendance</h4>
+          <p class="highlight">92%</p>
+          <div class="progress">
+            <div class="bar" style="width:92%"></div>
+          </div>
+        </div>
+        <div class="card">
+          <h4>Pending Assignments</h4>
+          <p class="highlight">3</p>
+          <small>2 due this week</small>
+        </div>
+        <div class="card">
+          <h4>Fee Balance</h4>
+          <p class="highlight">₹850</p>
+          <small>Due: March 15</small>
+        </div>
+      </section>
+
+      <!-- Activity + Quick Actions -->
+      <section class="bottom">
+        <div class="activity">
+          <h3>Recent Activity</h3>
+          <ul>
+            <li><span class="dot green"></span> Math Assignment Graded — <small>Score: 94/100 • 2 hours ago</small></li>
+            <li><span class="dot orange"></span> Physics Lab Due — <small>Tomorrow at 11:59 PM</small></li>
+            <li><span class="dot blue"></span> New Course Material — <small>Chemistry Chapter 5 uploaded</small></li>
+          </ul>
+        </div>
+
+        <div class="quick-actions">
+          <h3>Quick Actions</h3>
+          <button class="action-btn"><i class="fas fa-upload"></i> Submit Assignment</button>
+          <button class="action-btn"><i class="fas fa-calendar"></i> View Schedule</button>
+          <button class="action-btn"><i class="fas fa-credit-card"></i> Pay Fees</button>
+          <button class="action-btn"><i class="fas fa-book-open"></i> Access Library</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Script -->
+  <script src="dashboard.js"></script>
+</body>
+
+</html>

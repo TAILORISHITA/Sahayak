@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UniERP - Onboarding</title>
+
+  <link rel="stylesheet" href="../client_Side_backup/styles/onboarding.css" />
+  <link rel="stylesheet" href="../client_Side_backup/styles/sidebar_loader.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+  <div class="container">
+
+    <div id="sidebar-container"></div>
+
+    <main class="main">
+
+      <header class="topbar">
+        <div class="logo">
+          <i class="fas fa-graduation-cap"></i>
+          <span>UniERP</span>
+        </div>
+        <div class="icons">
+          <i class="fas fa-bell"></i>
+          <i class="fas fa-comment-alt"></i>
+          <i class="fas fa-user-circle"></i>
+        </div>
+      </header>
+
+      <section class="hero">
+        <h1>Welcome to Your University Journey</h1>
+        <p>Your comprehensive guide to university life, admissions, and academic success</p>
+      </section>
+
+      <nav class="tabs">
+        <button class="tab active" data-tab="admission-guide">Admission Guide</button>
+        <button class="tab" data-tab="faculty-selection">Faculty Selection</button>
+        <button class="tab" data-tab="campus-life">Campus Life</button>
+        <button class="tab" data-tab="fees-aid">Fees & Aid</button>
+      </nav>
+
+      <div class="content-sections">
+        <section class="content active" id="admission-guide">
+          <div class="card">
+            <h2><i class="fas fa-info-circle"></i> Admission Guidance</h2>
+            <p>Everything you need to know about the admission process</p>
+            <div class="accordion">
+              <div class="accordion-item">
+                <button class="accordion-header">What are the admission requirements?</button>
+                <div class="accordion-body">You need academic transcripts, ID proof, and entrance test
+                  scores.</div>
+              </div>
+              <div class="accordion-item">
+                <button class="accordion-header">When are the application deadlines?</button>
+                <div class="accordion-body">Application deadlines vary by semester. Please check the
+                  university calendar.
+                </div>
+              </div>
+              <div class="accordion-item">
+                <button class="accordion-header">What’s the application process?</button>
+                <div class="accordion-body">Submit your documents online, pay the application fee, and
+                  track status in the
+                  portal.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="content" id="faculty-selection">
+          <div class="card">
+            <h2><i class="fas fa-user-tie"></i> Faculty Selection</h2>
+            <p>Choose your path and faculty wisely</p>
+            <div class="accordion">
+              <div class="accordion-item">
+                <button class="accordion-header">How do I choose a faculty?</button>
+                <div class="accordion-body">Consider your interests, career goals, and the courses
+                  offered by each faculty.</div>
+              </div>
+              <div class="accordion-item">
+                <button class="accordion-header">Can I change my faculty later?</button>
+                <div class="accordion-body">Faculty changes are possible within the first semester,
+                  subject to availability and academic requirements.</div>
+              </div>
+              <div class="accordion-item">
+                <button class="accordion-header">Where can I find a list of all faculties?</button>
+                <div class="accordion-body">A detailed list of all faculties and their specializations
+                  is available on the
+                  university website.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="content" id="campus-life">
+          <div class="card">
+            <h2><i class="fas fa-building"></i> Campus Life</h2>
+            <p>Get a glimpse of what campus life is like</p>
+            <div class="accordion">
+              <div class="accordion-item">
+                <button class="accordion-header">What student clubs are available?</button>
+                <div class="accordion-body">We have a wide range of clubs from academic to sports and
+                  arts.</div>
+              </div>
+              <div class="accordion-item">
+                <button class="accordion-header">Are there on-campus housing options?</button>
+                <div class="accordion-body">Yes, we offer various on-campus dormitories with different
+                  amenities.</div>
+              </div>
+              <div class="accordion-item">
+                <button class="accordion-header">What support services are available?</button>
+                <div class="accordion-body">We provide academic advising, mental health support, and
+                  career services.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="content" id="fees-aid">
+          <div class="card">
+            <h2><i class="fas fa-dollar-sign"></i> Fees & Aid</h2>
+            <p>Information on tuition fees and financial assistance</p>
+            <div class="accordion">
+              <div class="accordion-item">
+                <button class="accordion-header">How are tuition fees calculated?</button>
+                <div class="accordion-body">Tuition fees are calculated based on your program and credit
+                  hours.</div>
+              </div>
+              <div class="accordion-item">
+                <button class="accordion-header">What financial aid options are there?</button>
+                <div class="accordion-body">We offer scholarships, grants, and student loans to eligible
+                  students.</div>
+              </div>
+              <div class="accordion-item">
+                <button class="accordion-header">When do I pay my fees?</button>
+                <div class="accordion-body">Fees are due at the beginning of each semester. You can find
+                  the specific
+                  deadlines in your student portal.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="card help">
+        <h2><i class="fas fa-life-ring"></i> Need Help?</h2>
+        <p>Our AI assistant is here to help you 24/7</p>
+        <div class="help-actions">
+          <button class="btn primary"><i class="fas fa-robot"></i> Chat with AI Assistant</button>
+          <button class="btn"><i class="fas fa-calendar"></i> Schedule Advisor Meeting</button>
+          <button class="btn"><i class="fas fa-download"></i> Download Brochure</button>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script>
+
+  </script>
+  <script src="../client_Side_backup/onboarding.js"></script>
+  <script src="../client_Side_backup/sidebar-loader.js"></script>
+
+</body>
+
+</html>
