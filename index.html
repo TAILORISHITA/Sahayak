@@ -1,170 +1,88 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
-    <link
-      rel="stylesheet"
-      as="style"
-      onload="this.rel='stylesheet'"
-      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Inter%3Awght%40400%3B500%3B700%3B900&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900"
-    />
-    <title>Stitch Design</title>
-    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <!-- Import the script as a module -->
-    <script type="module" src="script.js"></script>
-  </head>
-  <body>
-    <div class="relative flex h-auto min-h-screen w-full flex-col bg-white group/design-root overflow-x-hidden" style='font-family: Inter, "Noto Sans", sans-serif;'>
-      <div class="layout-container flex h-full grow flex-col">
-        <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#f0f2f4] px-10 py-3">
-          <div class="flex items-center gap-4 text-[#111418]">
-            <div class="size-4">
-              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M24 45.8096C19.6865 45.8096 15.4698 44.5305 11.8832 42.134C8.29667 39.7376 5.50128 36.3314 3.85056 32.3462C2.19985 28.361 1.76794 23.9758 2.60947 19.7452C3.451 15.5145 5.52816 11.6284 8.57829 8.5783C11.6284 5.52817 15.5145 3.45101 19.7452 2.60948C23.9758 1.76795 28.361 2.19986 32.3462 3.85057C36.3314 5.50129 39.7376 8.29668 42.134 11.8833C44.5305 15.4698 45.8096 19.6865 45.8096 24L24 24L24 45.8096Z"
-                  fill="currentColor"
-                ></path>
-              </svg>
-            </div>
-            <h2 class="text-[#111418] text-lg font-bold leading-tight tracking-[-0.015em]">Acme University</h2>
-          </div>
-        </header>
-        <div class="px-40 flex flex-1 justify-center py-5">
-          <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
-            <div class="flex flex-wrap justify-between gap-3 p-4">
-              <div class="flex min-w-72 flex-col gap-3">
-                <p class="text-[#111418] tracking-light text-[32px] font-bold leading-tight">Support Center</p>
-                <p class="text-[#617589] text-sm font-normal leading-normal">Find answers to common questions, view onboarding documents, or contact our support team for assistance.</p>
-              </div>
-            </div>
+<html lang="en">
 
-            <!-- FAQ Section -->
-            <h2 class="text-[#111418] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Frequently Asked Questions</h2>
-            <div class="flex flex-col p-4 gap-3" id="faq-container">
-              <!-- Dynamically generated FAQs will be inserted here -->
-            </div>
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>University Dashboard - Add Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f8fa;
+        }
 
-            <!-- Add FAQ Form -->
-            <h3 class="text-[#111418] text-[18px] font-semibold px-4 pb-2">Add a New FAQ</h3>
-            <div class="flex flex-col p-4 gap-3 bg-gray-50 rounded-lg mx-4 mb-6">
-              <label for="faq-question" class="text-[#111418] text-sm font-medium">Question:</label>
-              <input type="text" id="faq-question" class="form-input flex w-full rounded-lg border border-[#dbe0e6] px-3 py-2" placeholder="Enter your question" />
+        .card {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+        }
+    </style>
+</head>
 
-              <label for="faq-answer" class="text-[#111418] text-sm font-medium">Answer:</label>
-              <textarea id="faq-answer" class="form-input flex w-full rounded-lg border border-[#dbe0e6] px-3 py-2 min-h-[100px]" placeholder="Enter your answer"></textarea>
-
-              <button id="add-faq" class="bg-[#1172d4] hover:bg-[#0f5fb4] text-white rounded-lg px-4 py-2 transition-colors duration-200">Add FAQ</button>
-            </div>
-
-            <!-- Onboarding Documents Section -->
-            <h2 class="text-[#111418] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Onboarding Documents</h2>
-            <div class="flex flex-col p-4 gap-3" id="onboarding-container">
-              <!-- Dynamically generated onboarding documents will be inserted here -->
-            </div>
-
-            <!-- Add Onboarding Document Form -->
-            <h3 class="text-[#111418] text-[18px] font-semibold px-4 pb-2">Add a New Onboarding Document</h3>
-            <div class="flex flex-col p-4 gap-3 bg-gray-50 rounded-lg mx-4 mb-6">
-              <label for="onboarding-title" class="text-[#111418] text-sm font-medium">Title:</label>
-              <input type="text" id="onboarding-title" class="form-input flex w-full rounded-lg border border-[#dbe0e6] px-3 py-2" placeholder="Enter document title" />
-
-              <label for="onboarding-description" class="text-[#111418] text-sm font-medium">Description:</label>
-              <textarea id="onboarding-description" class="form-input flex w-full rounded-lg border border-[#dbe0e6] px-3 py-2 min-h-[100px]" placeholder="Enter document description"></textarea>
-
-              <button id="add-onboarding" class="bg-[#2d7a2d] hover:bg-[#236123] text-white rounded-lg px-4 py-2 transition-colors duration-200">Add Onboarding Document</button>
-            </div>
-          </div>
+<body class="flex flex-col items-center justify-center min-h-screen p-4">
+    <div class="text-center mb-8">
+        <div class="flex items-center justify-center mb-2">
+            <img alt="UniERP logo" class="w-12 h-12 mr-2"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBojzhqHrXe_0q-xE3z72JmUeNmLuXA-0TFE5HrZDrXN3Y0JGrINa9R3Si2XuEltaVXx-TXqhM7-5mz_E7sDdsDpBYAf_Xj1DfzlrEslVKs8xWn1yBwJQe6foMZL2xNFGpBqCQDKAht8gox13V5JOYf4dsYQ2ET7XHsH_AgQUr2JNf_G-LVoeLyoXVSjKl9_WC1JZc8kFMEbIo8H4J_5ZdJNJHpsLg80aRh6pQHzFKcdcGAslwnbevt2Qi_8ydAu-GNDZLLmvwhrczl" />
+            <h1 class="text-3xl font-bold text-gray-800">UniERP - University Dashboard</h1>
         </div>
-      </div>
-
-      <!-- Script to manage both FAQs and Onboarding Documents -->
-      <script type="module">
-        import { 
-          fetchFAQs, renderFAQs, addFAQ,
-          fetchOnboardingDocs, renderOnboardingDocs, addOnboardingDoc 
-        } from './script.js';
-
-        // Load both FAQs and Onboarding Documents on page load
-        window.onload = async () => {
-          // Load FAQs
-          const faqs = await fetchFAQs();
-          renderFAQs(faqs);
-
-          // Load Onboarding Documents
-          const onboardingDocs = await fetchOnboardingDocs();
-          renderOnboardingDocs(onboardingDocs);
-        };
-
-        // Add FAQ functionality
-        document.getElementById('add-faq').addEventListener('click', async () => {
-          const question = document.getElementById('faq-question').value.trim();
-          const answer = document.getElementById('faq-answer').value.trim();
-
-          if (question && answer) {
-            try {
-              await addFAQ(question, answer);
-
-              // Fetch and render updated FAQs
-              const faqs = await fetchFAQs();
-              renderFAQs(faqs);
-
-              // Clear input fields
-              document.getElementById('faq-question').value = '';
-              document.getElementById('faq-answer').value = '';
-
-              // Show success message
-              alert('FAQ added successfully!');
-            } catch (error) {
-              console.error('Error adding FAQ:', error);
-              alert('Failed to add FAQ. Please try again.');
-            }
-          } else {
-            alert('Please fill in both question and answer fields.');
-          }
-        });
-
-        // Add Onboarding Document functionality
-        document.getElementById('add-onboarding').addEventListener('click', async () => {
-          const title = document.getElementById('onboarding-title').value.trim();
-          const description = document.getElementById('onboarding-description').value.trim();
-
-          if (title && description) {
-            try {
-              await addOnboardingDoc(title, description);
-
-              // Fetch and render updated onboarding documents
-              const onboardingDocs = await fetchOnboardingDocs();
-              renderOnboardingDocs(onboardingDocs);
-
-              // Clear input fields
-              document.getElementById('onboarding-title').value = '';
-              document.getElementById('onboarding-description').value = '';
-
-              // Show success message
-              alert('Onboarding document added successfully!');
-            } catch (error) {
-              console.error('Error adding onboarding document:', error);
-              alert('Failed to add onboarding document. Please try again.');
-            }
-          } else {
-            alert('Please fill in both title and description fields.');
-          }
-        });
-
-        // Add Enter key support for forms
-        document.getElementById('faq-answer').addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' && e.ctrlKey) {
-            document.getElementById('add-faq').click();
-          }
-        });
-
-        document.getElementById('onboarding-description').addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' && e.ctrlKey) {
-            document.getElementById('add-onboarding').click();
-          }
-        });
-      </script>
+        <p class="text-gray-500">Manage your university and add admin credentials</p>
     </div>
-  </body>
+
+    <div class="w-full max-w-4xl bg-white p-8 rounded-lg shadow-md border border-gray-200">
+        <h2 class="text-xl font-semibold text-gray-700 mb-6">Add Admin Credentials</h2>
+        <form id="addAdminForm">
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-1" for="adminEmail">Admin Email</label>
+                <input
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                    id="adminEmail" name="adminEmail" type="email" placeholder="admin@university.edu" required />
+            </div>
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-1" for="adminPassword">Password</label>
+                <input
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                    id="adminPassword" name="adminPassword" type="password" required />
+            </div>
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-1" for="confirmPassword">Confirm Password</label>
+                <input
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                    id="confirmPassword" name="confirmPassword" type="password" required />
+            </div>
+            <button
+                class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                type="submit">Add Admin</button>
+        </form>
+    </div>
+
+    <script>
+        // JavaScript to handle form submission and validation
+        const form = document.getElementById('addAdminForm');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('adminEmail').value;
+            const password = document.getElementById('adminPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+
+            // Here you would typically handle the form submission, such as sending data to the server.
+            console.log('Admin added:', email);
+            alert('Admin credentials added successfully!');
+            form.reset();
+        });
+    </script>
+
+</body>
+
 </html>
