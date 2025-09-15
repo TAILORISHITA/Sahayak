@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>University Dashboard - Manage Admins</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f8fa;
+        }
+
+        .card {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+        }
+
+        .admin-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+        }
+
+        .admin-item button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .admin-item button:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+
+<body class="flex flex-col items-center justify-center min-h-screen p-4">
+    <div class="text-center mb-8">
+        <div class="flex items-center justify-center mb-2">
+            <img alt="UniERP logo" class="w-12 h-12 mr-2"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBojzhqHrXe_0q-xE3z72JmUeNmLuXA-0TFE5HrZDrXN3Y0JGrINa9R3Si2XuEltaVXx-TXqhM7-5mz_E7sDdsDpBYAf_Xj1DfzlrEslVKs8xWn1yBwJQe6foMZL2xNFGpBqCQDKAht8gox13V5JOYf4dsYQ2ET7XHsH_AgQUr2JNf_G-LVoeLyoXVSjKl9_WC1JZc8kFMEbIo8H4J_5ZdJNJHpsLg80aRh6pQHzFKcdcGAslwnbevt2Qi_8ydAu-GNDZLLmvwhrczl" />
+            <h1 class="text-3xl font-bold text-gray-800">UniERP - University Dashboard</h1>
+        </div>
+        <p class="text-gray-500">Manage your university and add admin credentials</p>
+    </div>
+
+    <div class="w-full max-w-4xl bg-white p-8 rounded-lg shadow-md border border-gray-200">
+        <h2 class="text-xl font-semibold text-gray-700 mb-6">Add Admin Credentials</h2>
+        <form id="addAdminForm">
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-1" for="adminEmail">Admin Email</label>
+                <input
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                    id="adminEmail" name="adminEmail" type="email" placeholder="admin@university.edu" required />
+            </div>
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-1" for="adminPassword">Password</label>
+                <input
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                    id="adminPassword" name="adminPassword" type="password" required />
+            </div>
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-1" for="confirmPassword">Confirm
+                    Password</label>
+                <input
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                    id="confirmPassword" name="confirmPassword" type="password" required />
+            </div>
+            <button
+                class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                type="submit">Add Admin</button>
+        </form>
+    </div>
+
+    <div id="adminListContainer" class="mt-8 w-full max-w-4xl">
+        <h3 class="text-xl font-semibold text-gray-700 mb-4">Manage Admins</h3>
+        <div id="adminList" class="admin-container">
+            <!-- Admins will be dynamically added here -->
+        </div>
+    </div>
+
+    <script type="module">
+        // Import Firebase services
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+
+        // Firebase config object
+        const firebaseConfig = {
+            apiKey: "AIzaSyDWVxMKaOjD10i87pX-kF6bPG8HbUNwGCY",
+            authDomain: "unierp-79b03.firebaseapp.com",
+            projectId: "unierp-79b03",
+            storageBucket: "unierp-79b03.firebasestorage.app",
+            messagingSenderId: "62493715652",
+            appId: "1:62493715652:web:72e922ae35048dbd40ad91",
+            measurementId: "G-GW9W07608T"
+        };
+
+        // Initialize Firebase and Firestore
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const form = document.getElementById('addAdminForm');
+        const adminListContainer = document.getElementById('adminList');
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const universityDomain = "university.edu"//sessionStorage.getItem('universityDomain');
+
+        // Handle form submission to add a new admin
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('adminEmail').value;
+            const password = document.getElementById('adminPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+
+            // try {
+            //     const universityDocRef = doc(db, 'universities', universityDomain);
+            //     const universityDocSnapshot = await getDoc(universityDocRef);
+
+            //     if (universityDocSnapshot.exists()) {
+            //         const universityData = universityDocSnapshot.data();
+            //         const admins = universityData.admins || [];
+
+            //         // Add new admin to the list
+            //         admins.push(email);
+
+            //         // Update the university document with the new admin list
+            //         await setDoc(universityDocRef, {
+            //             admins: admins
+            //         }, { merge: true });
+
+            //         alert('Admin credentials added successfully!');
+            //         loadAdmins();  // Reload the list of admins
+            //         form.reset();
+            //     } else {
+            //         alert('University not found!');
+            //     }
+            // } catch (error) {
+            //     console.error('Error adding admin:', error);
+            //     alert('Error adding admin!');
+            // }
+
+            try {
+                const universityDocRef = doc(db, 'universities', universityDomain);
+                const universityDocSnapshot = await getDoc(universityDocRef);
+
+                if (universityDocSnapshot.exists()) {
+                    const universityData = universityDocSnapshot.data();
+
+                    // Safely initialize admins as an array if it doesn't exist
+                    const admins = universityData.admins || [];
+
+                    // Add the new admin to the list
+                    admins.push(email);
+
+                    // Update the university document with the new admin list
+                    await setDoc(universityDocRef, {
+                        admins: admins
+                    }, { merge: true });
+
+                    alert('Admin credentials added successfully!');
+                    loadAdmins();  // Reload the list of admins
+                    form.reset();
+                } else {
+                    alert('University not found!');
+                }
+            } catch (error) {
+                console.error('Error adding admin:', error);
+                alert('Error adding admin!');
+            }
+
+        });
+
+        // Load the list of admins from Firestore
+        async function loadAdmins() {
+            try {
+                const universityDocRef = doc(db, 'universities', universityDomain);
+                const universityDocSnapshot = await getDoc(universityDocRef);
+
+                if (universityDocSnapshot.exists()) {
+                    const universityData = universityDocSnapshot.data();
+                    const admins = universityData.admins || [];
+
+                    // Clear the current list
+                    adminListContainer.innerHTML = '';
+
+                    // Display admins
+                    admins.forEach((adminEmail) => {
+                        const adminItem = document.createElement('div');
+                        adminItem.classList.add('admin-item');
+                        adminItem.innerHTML = `
+                            <span>${adminEmail}</span>
+                            <button onclick="deleteAdmin('${adminEmail}')">Delete</button>
+                        `;
+                        adminListContainer.appendChild(adminItem);
+                    });
+                } else {
+                    alert('University not found!');
+                }
+            } catch (error) {
+                console.error('Error loading admins:', error);
+                alert('Error loading admins!');
+            }
+        }
+
+        // Delete an admin
+        async function deleteAdmin(adminEmail) {
+            try {
+                const universityDocRef = doc(db, 'universities', universityDomain);
+                const universityDocSnapshot = await getDoc(universityDocRef);
+
+                if (universityDocSnapshot.exists()) {
+                    const universityData = universityDocSnapshot.data();
+                    const admins = universityData.admins || [];
+
+                    // Remove the admin from the list
+                    const updatedAdmins = admins.filter(admin => admin !== adminEmail);
+
+                    // Update the university document with the new admin list
+                    await setDoc(universityDocRef, {
+                        admins: updatedAdmins
+                    }, { merge: true });
+
+                    alert(`${adminEmail} has been removed!`);
+                    loadAdmins();  // Reload the list of admins
+                } else {
+                    alert('University not found!');
+                }
+            } catch (error) {
+                console.error('Error deleting admin:', error);
+                alert('Error deleting admin!');
+            }
+        }
+
+        // Load admins on page load
+        window.onload = loadAdmins;
+    </script>
+
+</body>
+
+</html>

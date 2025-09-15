@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VGEC Chatbot</title>
+
+    <style>
+        /* General body styling for a clean background */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* --- Chatbot Specific Styles --- */
+        #chatbot-wrapper {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        #chatbot-toggle-button {
+            cursor: pointer;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+            animation: pulse 2s infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+            transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s;
+        }
+
+        #chatbot-toggle-button img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        #chatbot-popup {
+            width: 380px;
+            height: 520px;
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform: scale(0.8) translateY(20px);
+            opacity: 0;
+            pointer-events: none;
+            transform-origin: bottom right;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        /* This class controls the popup visibility and animation */
+        #chatbot-wrapper.active #chatbot-popup {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Corrected CSS rule to hide the GIF when the chatbot is active */
+        #chatbot-wrapper.active #chatbot-toggle-button {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .chatbot-header {
+            background: linear-gradient(90deg, #007bff, #0056b3);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+
+        .chatbot-header h3 {
+            margin: 0;
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        #close-chatbot-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        #close-chatbot-button:hover {
+            opacity: 1;
+        }
+
+        .chatbot-content {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            font-family: sans-serif;
+            background-color: #f9fafb;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Chat message bubbles */
+        .message {
+            padding: 12px;
+            border-radius: 15px;
+            max-width: 80%;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .user-message {
+            background-color: #007bff;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 3px;
+        }
+
+        .bot-message {
+            background-color: #e5e7eb;
+            color: #333;
+            align-self: flex-start;
+            border-bottom-left-radius: 3px;
+        }
+
+        .input-container {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid #eee;
+            background-color: #fff;
+            gap: 10px;
+        }
+
+        .input-container input#chatbotTextPrompt {
+            flex-grow: 1;
+            padding: 10px;
+            border-radius: 20px;
+            border: 1px solid #ccc;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .input-container input#chatbotTextPrompt:focus {
+            border-color: #007bff;
+        }
+
+        .input-container button#chatbotSubmitBtn {
+            padding: 10px 15px;
+            border-radius: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .input-container button#chatbotSubmitBtn:hover {
+            background-color: #0056b3;
+        }
+
+        /* New styles for structured bot messages */
+        .bot-message h4 {
+            margin: 0 0 10px 0;
+            color: #0056b3;
+        }
+
+        .bot-message ul {
+            padding-left: 20px;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="chatbot-wrapper">
+        <div id="chatbot-toggle-button">
+            <img src="assistant composition final.gif" alt="Chatbot Icon">
+        </div>
+        <div id="chatbot-popup">
+            <div class="chatbot-header">
+                <h3>VGEC Chatbot</h3>
+                <button id="close-chatbot-button">✖</button>
+            </div>
+            <div class="chatbot-content" id="chatbot-messages">
+            </div>
+            <div class="input-container">
+                <input type="text" id="chatbotTextPrompt" placeholder="Ask a question...">
+                <button id="chatbotSubmitBtn">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // --- Firebase setup ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyDWVxMKaOjD10i87pX-kF6bPG8HbUNwGCY",
+            authDomain: "unierp-79b03.firebaseapp.com",
+            projectId: "unierp-79b03",
+            storageBucket: "unierp-79b03.firebasestorage.app",
+            messagingSenderId: "62493715652",
+            appId: "1:62493715652:web:72e922ae35048dbd40ad91",
+            measurementId: "G-GW9W07608T"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // --- Fetch FAQs from Firestore ---
+        async function fetchDynamicFaqs() {
+            let dynamicFaqs = "";
+            try {
+                const snapshot = await getDocs(collection(db, "faqs"));
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.question && data.answer) {
+                        dynamicFaqs += `\nQ: ${data.question}\nA: ${data.answer}\n`;
+                    }
+                });
+            } catch (err) {
+                console.error("Error fetching FAQs:", err);
+            }
+            return dynamicFaqs;
+        }
+        // --- Fetch onboarding documents from Firestore ---
+        async function fetchOnboardingContent() {
+            let onboardingContent = "";
+            try {
+                const snapshot = await getDocs(collection(db, "onboarding"));
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    // Check for the title and description fields as specified
+                    if (data.title && data.description) {
+                        // Format the content in a readable way
+                        onboardingContent += `\nTitle: ${data.title}\nDescription: ${data.description}\n`;
+                    }
+                });
+            } catch (err) {
+                console.error("Error fetching onboarding content:", err);
+            }
+            return onboardingContent;
+        }
+        // --- Gemini API call ---
+        async function getModelResponse(prompt) {
+
+            const apiKey = "AIzaSyBW3ndU9q7pWyp1e9XJ3BuOAWGqljBdVB4";
+            // FIXED: Changed to correct model name
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+
+            const systemInstruction = `
+                You are an intelligent FAQ chatbot for Vishwakarma Government Engineering College (VGEC), Ahmedabad.
+                Your purpose is to answer student, faculty, and administrative questions based ONLY on the structured knowledge base below.
+
+                **Instructions:**
+                1.  **Direct Match:** Find a direct Q&A pair in the knowledge base that answers the user's question.
+                2.  **Related Match:** If a direct match is not found, search the knowledge base for topics, keywords, or faculty names that are closely related to the user's query and provide the most relevant information.
+                3.  **Out of Scope:** If a query falls completely outside this knowledge base, reply with JSON exactly:
+                    {"response_type": "text", "content": "I can only answer questions related to Vishwakarma Government Engineering College's academic system and services."}
+                4.  **Format Answers as JSON:** Always return your response as a single JSON object.
+                    - **For simple answers:** Use {"response_type": "text", "content": "Your answer here."}
+                    - **For lists (like departments or faculty):** Use {"response_type": "list", "title": "Your list title", "content": ["Item 1", "Item 2", "Item 3"]}
+                    - **For specific details (like a faculty profile):** Use {"response_type": "profile", "title": "Faculty Name", "content": {"key": "value", "key2": "value2"}}
+                5.  **Be concise and clear.**
+                6.  **Analyze full answer understand its meaning then rephrase it to clear concise understandable and formatted output **
+
+                ### System Description
+                Q: What is the purpose of the integrated management system?
+                A: The system outlines an integrated workflow where admission data flows into a central student database, financial transactions generate digital receipts, hostel and library records update in real time, and summary dashboards present key metrics to administrators. It is delivered through widely available software services, not proprietary hardware.
+
+                ### Departments at VGEC
+                Q: What departments are at VGEC?
+                A: The departments are: Chemical Engineering, Computer Engineering, Civil Engineering, Electrical Engineering, Electronics & Communication, Information Technology, Instrumentation & Control, Mechanical Engineering, Power Electronics, Science and Humanities, Applied Mechanics, Computer Science & Engineering (Data Science), Electronics & Instrumentation Engineering, and Information & Communication Technology.
+
+                ### Faculty Directory
+                Q: Who is Prof. Kajal S. Patel?
+                Q: Who is Kajal S. Patel?
+                A: Prof. Kajal S. Patel is an Associate Professor with a Ph.D. Her email is kajalpatel@vgecg.ac.in.
+                Q: Who is Prof. Hetal A. Joshiara?
+                Q: Who is Hetal A. Joshiara?
+                A: Prof. Hetal A. Joshiara is an Associate Professor with a Ph.D. His email is hetaljoshiyara@vgecg.ac.in.
+                Q: Who is Prof. Viral Borisagar?
+                Q: Who is Viral Borisagar?
+                A: Prof. Viral Borisagar is an Associate Professor with a Ph.D. His email is vhborisagar@vgecg.ac.in.
+                Q: Who is Prof. Jalpa M. Ramavat?
+                Q: Who is Jalpa M. Ramavat?
+                A: Prof. Jalpa M. Ramavat is an Assistant Professor with a Ph.D. Her email is jalpa.ramavat.2012@vgecg.ac.in.
+                Q: Who is Prof. Nakul R. Dave?
+                Q: Who is Nakul R. Dave?
+                A: Prof. Nakul R. Dave is an Assistant Professor with a Ph.D. His email is davenakul@vgecg.ac.in.
+                Q: Who is Prof. Amit H. Rathod?
+                Q: Who is Amit H. Rathod?
+                A: Prof. Amit H. Rathod is an Assistant Professor with an M.E. His email is amit.rathod@vgecg.ac.in.
+                Q: Who is Prof. Nirav B. Suthar?
+                Q: Who is Nirav B. Suthar?
+                A: Prof. Nirav B. Suthar is an Assistant Professor with an M.E. His email is niravsuthar@vgecg.ac.in.
+                Q: Who is Prof. Jaimin M. Shroff?
+                Q: Who is Jaimin M. Shroff?
+                A: Prof. Jaimin M. Shroff is an Assistant Professor with an M.Tech. His email is jmshroff@vgecg.ac.in.
+                Q: Who is Prof. Jigna J. Jadav?
+                Q: Who is Jigna J. Jadav?
+                A: Prof. Jigna J. Jadav is an Assistant Professor with a Ph.D. Her email is jigna_jadav@vgecg.ac.in.
+                Q: Who is Prof. Vinodray D. Thumar?
+                Q: Who is Vinodray D. Thumar?
+                A: Prof. Vinodray D. Thumar is an Assistant Professor with a Ph.D. His email is vdthumar@vgecg.ac.in.
+                Q: Who is Prof. Karan P. Bhatt?
+                Q: Who is Karan P. Bhatt?
+                A: Prof. Karan P. Bhatt is an Assistant Professor with an M.E. His email is kpbhatt@vgecg.ac.in.
+                Q: Who is Prof. Avani Nakul Dave?
+                Q: Who is Avani Nakul Dave?
+                A: Prof. Avani Nakul Dave is an Assistant Professor with an M.E. Her email is andave@vgecg.ac.in.
+                Q: Who is Prof. Rahul K. Shah?
+                Q: Who is Rahul K. Shah?
+                A: Prof. Rahul K. Shah is an Assistant Professor with an M.Tech. His email is rkshah@vgecg.ac.in.
+                Q: Who is Prof. Bhavinkumar N. Patel?
+                Q: Who is Bhavinkumar N. Patel?
+                A: Prof. Bhavinkumar N. Patel is an Assistant Professor with an M.E. His email is bnpatel@vgecg.ac.in.
+
+                ### Faculty & Responsibility
+                Q: Who teaches DBMS?
+                A: Prof. Hetal Joshiara.
+                Q: Who teaches Data Structures?
+                A: Prof. Vinodray D. Thumar.
+                Q: Who provides admission-related guidance?
+                A: Prof. Vinodray D. Thumar.
+                Q: Whom should I contact for Direct-to-Direct (D2D) admission queries?
+                Q: Whom can I contact for D2D admissions?
+                A: You should contact Prof. Bhavin.
+                Q: Whom should I contact for regular admission queries?
+                A: You should contact Vinod Sir.
+                Q: Who teaches Physics?
+                A: Prof. Snehal Palladiya.
+                Q: Who runs the Physics Core Club?
+                A: Prof. Snehal Palladiya.
+                Q: Who are the Maths faculty?
+                A: The Maths faculty are Prof. Sapan, Prof. K.T. Shukla, and Prof. Jatin.
+                Q: Who are the English faculty?
+                A: The English faculty are Prof. Yashasvi and Prof. Anjali.
+                Q: Who should I contact for Data Science (DS) subject questions?
+                Q: Who teaches Data Science?
+                A: You can contact the Computer Science & Engineering (Data Science) department for assistance.
+
+                ### Student Life & Activities
+                Q: How can I join the VGEC Book Club, NSS, NCC, or Mission English Club?
+                A: These clubs and organizations, including the Mission English Club, are related to communication skills and English practice. You can find information about joining them through student life announcements.
+                Q: How can I suggest a new book for the library?
+                A: The online library catalog has a feature that allows you to suggest new book titles for the library to consider purchasing.
+                Q: How can I improve my communication skills and English practice?
+                A: The VGEC Book Club, NSS, NCC, and Mission English Club are available for communication skills and English practice.
+                Q: Who is the person who manages VGEC Book CLub , NSS , NCC ?
+                A: Its behind waseem Qureshi sir
+
+                ### Contact Information
+                Q: Whom should I email for general admission or academic queries?
+                A: You can email est@vgecg.ac.in or sts@vgecg.ac.in.
+                Q: What is the college phone number?
+                A: The college phone number is (079) 23293866.
+                Q: What is the address of VGEC?
+                A: The address is Nr. Visat Three Roads, Sabarmati–Koba Highway, Chandkheda, Ahmedabad-382424.
+                Q: Where can I find official details about faculties and the college?
+                A: You can find official details on the website: https://www.vgecg.ac.in/faculties.php.
+
+                ### General System & Academic FAQs
+                Q: How do I reset my university portal password?
+                A: Go to login page → click "Forgot Password" → follow instructions.
+                Q: How do I set up my university email account?
+                A: Log into student portal → Email Setup → follow guide.
+                Q: Where can I find my class schedule?
+                A: Go to Academics → Class Schedule.
+                Q: How do I submit assignments online?
+                A: Go to Courses → Assignments → Upload file.
+                Q: How do I apply for scholarships?
+                A: Go to Financial Aid → Scholarships → Apply form.
+                Q: What should I do if I can't access the WiFi?
+                A: Restart device → reconnect with campus ID → if still fails, contact IT support.
+                Q: How do I update my personal information?
+                A: You can update your personal information by navigating to your profile settings. The changes will be updated in the central student database in real-time.
+                Q: What happens if my admission is provisional?
+                A: Your provisional status will be clearly indicated on your student dashboard. As soon as all required documents are submitted and verified, your status will automatically be updated to confirmed.
+                Q: How is my data shared between departments?
+                A: All departments, including admissions, finance, and hostels, access the same central student database.
+                Q: What if I forget my university ID number?
+                A: Your university ID is on your student dashboard. If you cannot access the dashboard, you can retrieve it by contacting IT support.
+                Q: How can I get help outside of business hours?
+                A: The system's help section provides a knowledge base with answers to common questions. You can submit a support ticket that will be addressed during the next business day.
+                Q: How is system downtime handled?
+                A: The system is built on widely available, reliable software services designed for high uptime. In the rare event of planned maintenance, a notification will be posted on the portal in advance.
+                Q: Is there a way to view a history of changes made to my record?
+                A: Yes, the central student database maintains a history of all major changes to your profile.
+                Q: What security measures are in place to protect my account?
+                A: The system uses secure, industry-standard encryption protocols and multi-factor authentication.
+                Q: How can I get a detailed financial statement?
+                A: You can request a detailed financial statement, including all transactions and outstanding balances, from the 'Financials' section of your dashboard.
+                Q: Can I pay fees using a different currency?
+                A: The system's payment gateway supports multiple currencies and will automatically convert your payment to the required currency.
+                Q: What is the process for a fee refund?
+                A: Fee refunds are processed through a standardized workflow initiated by the finance department. The refund amount will be credited to the original payment method and logged in your financial record.
+                Q: How will I be notified about upcoming fee deadlines?
+                A: The system will send automated reminders to your university email and display alerts on your dashboard as fee payment deadlines approach.
+                Q: Can a guardian access my financial information?
+                A: You can grant your guardian limited access to your financial records and payment history through a designated feature in your account settings.
+                Q: What happens if a payment went through?
+                A: After every successful payment, a digital receipt is automatically generated. You can check the status of a transaction in real-time on your financial dashboard.
+                Q: How can I see a breakdown of my tuition versus other fees?
+                A: The 'Financials' dashboard provides a clear, itemized breakdown of your tuition, hostel, library, and other fees.
+                Q: What if I have a scholarship?
+                A: Scholarships are automatically applied to your account. You can view the scholarship amount and how it affects your total outstanding balance on your financial dashboard.
+                Q: How are late payment fees applied?
+                A: Late payment fees are automatically calculated and added to your outstanding balance based on the payment due date.
+                Q: How can I request a roommate change?
+                A: You can submit a roommate change request through the 'Hostel' section of your student portal.
+                Q: What are the steps to check a book back into the library?
+                A: You can check a book back in at a self-service kiosk by scanning your student ID and the book's barcode.
+                Q: Can I renew books online?
+                A: Yes, you can renew books through the library's section on your student portal, as long as the book has not been reserved by another student.
+                Q: How do I report a missing item from my hostel room?
+                A: You can log a report of a missing item through the 'Hostel' section, which will create a record for the hostel administration to follow up on.
+                Q: How are my overdue book fines calculated?
+                A: Overdue fines are calculated automatically based on the book type and the number of days it is late, and are immediately added to your financial record.
+                Q: What if a book I need is checked out?
+                A: You can place a hold or reserve the book through the online library catalog. You will receive a notification when the book is returned and available for you to check out.
+                Q: How can I view my hostel check-in and check-out dates?
+                A: Your hostel check-in and check-out history is saved in the central student database and can be viewed in the 'Hostel' section of your dashboard.
+                Q: Is my hostel meal plan linked to the system?
+                A: Yes, your meal plan and daily usage are updated in real-time and linked to your student ID.
+                Q: How do I get a library card?
+                A: Your student ID serves as your library card. The barcode on your ID is the unique identifier used by the library system.
+                Q: How can I view a specific student's full profile?
+                A: Administrators can perform a search in the central student database using a student's ID or name to access their comprehensive profile.
+                Q: Can I get real-time reports on application status?
+                A: Yes, the admissions dashboard provides real-time analytics and summary reports on the status of all applications.
+                Q: How do I input a student's grade?
+                A: Instructors can input student grades through the course management module. The grades are instantly updated in the student's academic record.
+                Q: Can I manage faculty and staff records in the same database?
+                A: The central database can be extended to manage faculty and staff records.
+                Q: How can I send a bulk notification to all students?
+                A: The system includes an administrator dashboard feature for sending mass notifications via email or a portal message.
+                Q: What happens if a financial transaction has an error?
+                A: The system flags any failed or erroneous transactions, and an an alert is sent to the finance administrator's dashboard for manual review.
+                Q: How can I monitor hostel occupancy rates?
+                A: The hostel management dashboard provides a real-time summary of occupancy rates.
+                Q: How can I get an official transcript?
+                A: You can request an official transcript from the Academic Records section of your portal.
+                Q: Can I change my major through the portal?
+                A: Yes, the portal has a feature for submitting a change of major request, which is then sent to your academic advisor for approval.
+                Q: What is the process for taking a leave of absence?
+                A: You can apply for a leave of absence through the student services section of the portal.
+                Q: Where can I view my detailed payment history?
+                A: A complete payment history is available in the Financials section of your dashboard.
+                Q: Can I split a fee payment with a guardian?
+                A: Yes, the system's financial module allows you to designate a portion of a fee to be paid by an authorized guardian account.
+                Q: What happens if I lose my hostel key?
+                A: You can report a lost key through the hostel section of the portal. The system will track the incident and a replacement fee will be automatically added to your financial record.
+                Q: How do I report a maintenance issue in my hostel room?
+                A: You can submit a maintenance request through the hostel module. The report will be logged and assigned to the relevant staff.
+                Q: How can I book a library study room?
+                A: The library module allows you to view available study rooms in real-time and book them for a specific duration.
+                Q: Can I register for courses online?
+                A: Yes, the academic module has a course registration feature where you can browse available courses and enroll in them directly.
+                Q: How do I drop a class?
+                A: You can drop a class through the course registration section.
+                Q: Where are my final grades posted?
+                A: Final grades are posted in the Academics section of your student dashboard as soon as they are submitted by your instructor.
+                Q: How can I get a student ID card?
+                A: Your student ID card can be printed at the Student Services office after your profile has been fully processed in the central database.
+                Q: How do I get a digital copy of my enrollment certificate?
+                A: You can download a digital copy of your enrollment certificate from your student profile once your admission is confirmed.
+                Q: How do I receive system-wide announcements?
+                A: System-wide announcements are delivered to your student dashboard and university email account.
+                Q: Is there an audit trail for data changes?
+                A: Yes, every change to a student's record is logged with a timestamp and user ID.
+                Q: Can I access my past financial statements?
+                A: Yes, all past financial statements and receipts are archived and available for download in the 'Financial History' section of your account.
+                Q: How is the system updated?
+                A: The system uses a continuous integration/continuous deployment (CI/CD) pipeline, allowing for seamless, real-time updates and improvements without significant downtime.
+                Q: Can I register for a new semester's courses before the current one ends?
+                A: Yes, pre-registration for the next semester's courses is available through the academic module during a designated registration window.
+
+                ### Student Onboarding FAQs
+
+                Here are 30 onboarding FAQs in the requested Q&A format, designed to cover a range of topics from basic student concerns to questions parents might ask.
+
+                ---
+
+                **General Student Questions**
+
+                Q: How do I get my student ID card?
+                A: You can pick up your student ID card at the Student Services office after your admission is fully processed.
+
+                Q: How do I activate my university email account?
+                A: You'll receive an activation link in your personal email. Just log into the student portal, go to 'Email Setup,' and follow the instructions.
+
+                Q: Where can I find my class schedule and academic calendar?
+                A: Both your class schedule and the academic calendar are available in the 'Academics' section of your student portal.
+
+                Q: How can I register for courses each semester?
+                A: Course registration is done online through the academic module on your portal during the designated registration window.
+
+                Q: What should I do if I forget my password for the student portal?
+                A: On the login page, simply click 'Forgot Password' and follow the steps to reset it using your registered email.
+
+                Q: Where can I get help with my assignments or studies?
+                A: The college offers academic support services. You can also contact your course instructor directly via their university email.
+
+                Q: How do I join a student club or organization?
+                A: Information about all student clubs and how to join them is available on the student life section of the college website and on campus notice boards.
+
+                Q: What is the process for taking a leave of absence?
+                A: You can submit a leave of absence request through the student services section of your portal, which will then be reviewed by your academic advisor.
+
+                Q: How can I book a library study room?
+                A: You can check for available study rooms in real-time and book them through the library's module on your student portal.
+
+                Q: Where can I find a list of all college departments?
+                A: A complete list of departments, including Computer Engineering, Civil Engineering, and IT, can be found on the official college website.
+
+                **Creative/Scenario-Based Questions**
+
+                Q: What if I have a brilliant idea for a new student club?
+                A: The Student Government Association (SGA) has a formal process for proposing and creating new clubs. You can find the application form on their portal page.
+
+                Q: My laptop died in the middle of a major project! Is there any tech support?
+                A: Yes, the college's IT support team can assist you. You can find their contact information and hours on the IT services page of the college website.
+
+                Q: I'm not feeling well. How do I get medical help on campus?
+                A: The campus health center provides medical services. You can call their office or visit in person to get assistance from the on-duty nurse or doctor.
+
+                Q: I'm worried about my grades. Whom should I talk to?
+                A: You can schedule a meeting with your academic advisor or the specific course professor to discuss your performance and get advice on improving.
+
+                Q: Where's the best place on campus to grab a coffee between classes?
+                A: The student cafeteria and various small cafes around the academic buildings offer a variety of food and beverage options.
+
+                Q: I need to do some serious research for a project. What resources are available besides books?
+                A: The college library provides access to a vast collection of academic journals and online databases, which you can access for free using your student ID.
+
+                Q: What if I lose my hostel key?
+                A: You should immediately report a lost key to the hostel administration office, and they will issue you a replacement. A small replacement fee may be added to your financial record.
+
+                Q: My roommate and I are not getting along. Can I request a change?
+                A: Yes, you can submit a roommate change request through the 'Hostel' section of your student portal for review by the administration.
+
+                Q: I'm new here and feeling a bit lost. How can I make new friends?
+                A: Attending student club meetings, participating in campus events, and joining orientation week activities are great ways to meet new people and build connections.
+
+                Q: How do I know about college events and workshops?
+                A: The college portal has a dedicated events section. You will also receive announcements via your university email about upcoming workshops and events.
+
+                **Basic/Parent-Oriented Questions**
+
+                Q: How are admission fees paid?
+                A: Admission fees can be paid through the secure online payment gateway on the college portal, which accepts various payment methods including credit cards and online banking.
+
+                Q: How do I get a detailed financial statement for my student?
+                A: The student's financial dashboard provides a clear, itemized breakdown of tuition and other fees. You can view this information by logging into the student portal.
+
+                Q: What happens if the student's admission is provisional?
+                A: The student's dashboard will clearly indicate their provisional status. Once all required documents are submitted and verified, their status will be automatically updated to confirmed.
+
+                Q: How will I be notified about upcoming fee deadlines?
+                A: The college's automated system sends reminders about fee deadlines to the student's university email and displays alerts on their dashboard.
+
+                Q: How does the hostel assignment process work?
+                A: Hostel room assignments are done through a streamlined process in the central student database after admission is confirmed.
+
+                Q: Can a guardian have access to the student's financial information?
+                A: The student can grant their guardian limited access to financial records and payment history through a designated feature in their account settings.
+
+                Q: What security measures are in place to protect my student's personal data?
+                A: The system uses secure, industry-standard encryption protocols and multi-factor authentication to protect all student information.
+
+                Q: Who should I contact for general academic inquiries?
+                A: For general academic inquiries, you can email the Student Support Team (sts@vgecg.ac.in). For specific course questions, it's best to contact the instructor directly.
+
+                Q: How is the student's safety ensured on campus?
+                A: The college has a robust security system, including on-campus security personnel, to ensure the safety of all students, faculty, and staff.
+
+                Q: What is the process for a fee refund?
+                A: Fee refunds are processed through a standardized workflow initiated by the finance department. The refund amount will be credited to the original payment method.
+            `;
+
+
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{
+                        role: "user",
+                        parts: [{ text: prompt }]
+                    }],
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "OBJECT",
+                            properties: {
+                                "response_type": { "type": "STRING" },
+                                "title": { "type": "STRING", "optional": true },
+                                "content": { "type": "ANY" }
+                            }
+                        }
+                    },
+                    systemInstruction: {
+                        parts: [{ text: systemInstruction }]
+                    }
+                })
+            };
+
+            try {
+                const response = await fetch(apiUrl, requestOptions);
+                const data = await response.json();
+
+                // Check if the API returned any candidates
+                if (!data.candidates || data.candidates.length === 0) {
+                    return { response_type: "text", content: "No response from the Gemini API. Please try again." };
+                }
+
+                const rawJson = data.candidates[0].content.parts[0].text;
+                try {
+                    return JSON.parse(rawJson);
+                } catch (jsonError) {
+                    console.error("Error parsing JSON response:", jsonError);
+                    return { response_type: "text", content: "I received a response, but it was not in the correct format. Please try rephrasing your question." };
+                }
+            } catch (networkError) {
+                console.error("Error contacting API:", networkError);
+                return { response_type: "text", content: "Error contacting the API. Please check your network connection and try again." };
+            }
+        }
+        // --- Chatbot widget ---
+        const chatbotWrapper = document.getElementById("chatbot-wrapper");
+        const chatbotToggleButton = document.getElementById("chatbot-toggle-button");
+        const closeChatbotButton = document.getElementById("close-chatbot-button");
+        const chatbotTextPrompt = document.getElementById("chatbotTextPrompt");
+        const chatbotSubmitBtn = document.getElementById("chatbotSubmitBtn");
+        const chatbotMessages = document.getElementById("chatbot-messages");
+
+        chatbotToggleButton.addEventListener("click", () => chatbotWrapper.classList.toggle("active"));
+        closeChatbotButton.addEventListener("click", () => chatbotWrapper.classList.remove("active"));
+
+        chatbotSubmitBtn.addEventListener("click", async () => {
+            const prompt = chatbotTextPrompt.value;
+            if (!prompt) return;
+
+            // Add user message to the chat
+            addMessage(prompt, 'user-message');
+            chatbotTextPrompt.value = '';
+
+            // Add a loading message from the bot
+            const loadingMessage = addMessage('...', 'bot-message');
+
+            const response = await getModelResponse(prompt);
+
+            // Render the formatted response
+            renderBotMessage(loadingMessage, response);
+            scrollToBottom();
+        });
+
+        // Enter key support for input
+        chatbotTextPrompt.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                chatbotSubmitBtn.click();
+            }
+        });
+
+        // Function to add a new message to the chat
+        function addMessage(text, className) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${className}`;
+            messageDiv.textContent = text;
+            chatbotMessages.appendChild(messageDiv);
+            scrollToBottom();
+            return messageDiv;
+        }
+
+        // Function to render the structured bot message
+        function renderBotMessage(messageElement, response) {
+            messageElement.innerHTML = ''; // Clear the loading text
+
+            const responseType = response.response_type;
+            const content = response.content;
+            const title = response.title || 'Answer';
+
+            switch (responseType) {
+                case 'text':
+                    messageElement.textContent = content;
+                    break;
+                case 'list':
+                    const listTitle = document.createElement('h4');
+                    listTitle.textContent = title;
+                    messageElement.appendChild(listTitle);
+
+                    const ul = document.createElement('ul');
+                    content.forEach(item => {
+                        const li = document.createElement('li');
+                        li.textContent = item;
+                        ul.appendChild(li);
+                    });
+                    messageElement.appendChild(ul);
+                    break;
+                case 'profile':
+                    const profileTitle = document.createElement('h4');
+                    profileTitle.textContent = title;
+                    messageElement.appendChild(profileTitle);
+
+                    for (const key in content) {
+                        const p = document.createElement('p');
+                        p.innerHTML = `<strong>${key}:</strong> ${content[key]}`;
+                        messageElement.appendChild(p);
+                    }
+                    break;
+                default:
+                    messageElement.textContent = "Sorry, I couldn't format that response properly.";
+            }
+            messageElement.classList.add('bot-message'); // Ensure class is correct
+        }
+
+        // Function to automatically scroll to the latest message
+        function scrollToBottom() {
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }
+    </script>
+</body>
+
+</html>
